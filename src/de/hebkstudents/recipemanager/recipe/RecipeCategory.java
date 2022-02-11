@@ -1,6 +1,7 @@
 package de.hebkstudents.recipemanager.recipe;
 
 public class RecipeCategory {
+    //Attribute
     private String name;
     private String taste;
     private int time;
@@ -9,7 +10,11 @@ public class RecipeCategory {
     private int defaultQuantity;
     private String description;
 
+    //Konstruktor
+    //Methoden
     private RecipeCategory getCategory() {
         return null;
     }
+
+    //get-/setter
 }

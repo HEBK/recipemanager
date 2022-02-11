@@ -7,7 +7,7 @@ public class Recipe extends RecipeTemplate {
     //Konstruktor
 
     //Methoden
-    private boolean save(){
+    private boolean save() {
         return false;
     }
 

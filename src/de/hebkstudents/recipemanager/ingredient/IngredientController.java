@@ -6,11 +6,11 @@ public class IngredientController {
     //Konstruktor
 
     //Methoden
-    public boolean addIngredient(IngredientTemplate template){
+    public boolean addIngredient(IngredientTemplate template) {
         return false;
     }
 
-    public boolean deleteIngredient(Ingredient ingredient){
+    public boolean deleteIngredient(Ingredient ingredient) {
         return false;
     }
 

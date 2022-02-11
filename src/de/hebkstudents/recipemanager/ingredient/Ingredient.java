@@ -7,7 +7,7 @@ public class Ingredient {
     //Konstruktor
 
     //Methoden
-    private boolean save(){
+    private boolean save() {
         return false;
     }
     //get-/setter

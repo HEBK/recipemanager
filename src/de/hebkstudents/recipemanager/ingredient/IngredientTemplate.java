@@ -10,7 +10,7 @@ public class IngredientTemplate {
     //Konstruktor
 
     //Methoden
-    private IngredientCategory getIngredientCategory(){
+    private IngredientCategory getIngredientCategory() {
         return null;
     }
 

@@ -11,5 +11,11 @@ public class Ingredient {
         return false;
     }
     //get-/setter
+    public int getIngredientID() {
+        return ingredientID;
+    }
 
+    public void setIngredientID(int ingredientID) {
+        this.ingredientID = ingredientID;
+    }
 }

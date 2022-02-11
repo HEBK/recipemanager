@@ -12,4 +12,11 @@ public class Recipe extends RecipeTemplate {
     }
 
     //get-/setter
+    public int getRecipeID() {
+        return recipeID;
+    }
+
+    public void setRecipeID(int recipeID) {
+        this.recipeID = recipeID;
+    }
 }

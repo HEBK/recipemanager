@@ -14,7 +14,7 @@ public class DatabaseController {
         try {
             DriverManager.getConnection("jdbc:sqlite:resources/data.db");
         } catch (SQLException e) {
-            Logger.log(LogType.CRITICAL, "Database connection could not be initalized");
+            Logger.log(LogType.CRITICAL, "Database connection could not be initialized!");
         }
     }
 }

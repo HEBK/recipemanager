@@ -12,7 +12,7 @@ public class AddRecipe extends AppFrame {
     private JPanel root;
 
     public AddRecipe(GUIController controller) {
-        super(controller, buildFrameTitle("Rezept hinzufügen"), new Dimension(750, 550));
+        super(controller, buildFrameTitle("Rezept hinzufügen"), new Dimension(600, 400), true);
     }
 
     @Override

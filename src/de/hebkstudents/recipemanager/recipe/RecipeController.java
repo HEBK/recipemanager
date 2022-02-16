@@ -2,7 +2,7 @@ package de.hebkstudents.recipemanager.recipe;
 
 public class RecipeController {
     //Attribute
-    //KOnstruktor
+    //Konstruktor
 
     //Methode
     public static boolean addRecipe (RecipeTemplate template) {

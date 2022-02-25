@@ -13,10 +13,12 @@ public class AddRecipe extends AppFrame {
     private JTextPane schwierigkeitTextPane;
     private JTextPane zeitTextPane;
     private JTextPane zutatenTextPane;
-    private JTextPane addRecipeTextPane;
     private JTextArea textArea1;
     private JTable table1;
     private JButton addRecipeButton;
+    private JComboBox comboBox1;
+    private JTextPane textPane1;
+    private JTextArea textArea2;
 
     public AddRecipe(GUIController controller) {
         super(controller, buildFrameTitle("Rezept hinzufügen"), new Dimension(600, 400), true);

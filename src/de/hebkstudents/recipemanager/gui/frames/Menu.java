@@ -32,5 +32,7 @@ public class Menu extends AppFrame {
         setMinimumSize(new Dimension(750, 550));
         versionLabel.setText("v" + VERSION);
         appnameLabel.setText(APPNAME);
+        showRecipesButton.setName("buttonMenuShowRecipes");
+        showRecipesButton.addActionListener(controller);
     }
 }

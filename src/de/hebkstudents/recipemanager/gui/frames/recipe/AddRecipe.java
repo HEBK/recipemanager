@@ -8,15 +8,10 @@ import java.awt.*;
 
 public class AddRecipe extends AppFrame {
     private JPanel root;
-    private JTextPane rezeptNameTextPane;
-    private JTextPane beschreibungTextPane;
-    private JTextPane schwierigkeitTextPane;
-    private JTextPane zeitTextPane;
-    private JTextPane zutatenTextPane;
     private JTextArea textArea1;
     private JTable table1;
     private JButton addRecipeButton;
-    private JComboBox comboBox1;
+    private JComboBox difficultyComboBox;
     private JTextPane textPane1;
     private JTextArea textArea2;
 

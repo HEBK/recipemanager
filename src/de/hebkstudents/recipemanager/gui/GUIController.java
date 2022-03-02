@@ -2,6 +2,7 @@ package de.hebkstudents.recipemanager.gui;
 
 import de.hebkstudents.recipemanager.RecipeManager;
 import de.hebkstudents.recipemanager.gui.frames.Menu;
+import de.hebkstudents.recipemanager.gui.frames.ingredient.ShowIngredients;
 import de.hebkstudents.recipemanager.gui.frames.recipe.ShowRecipes;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 import eu.cr4zyfl1x.logger.LogType;
@@ -19,6 +20,7 @@ public class GUIController implements ActionListener {
 
     private AppFrame menu;
     private AppFrame showRecipes;
+    private AppFrame showIngredients;
 
     public GUIController(RecipeManager app)
     {
@@ -92,10 +94,14 @@ public class GUIController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String componentID = ((Component) e.getSource()).getName();
-        switch (componentID){
+        switch (componentID) {
             case "buttonMenuShowRecipes":
-                if(!focusFrame(showRecipes)){
+                if(!focusFrame(showRecipes)) {
                     showRecipes = new ShowRecipes(this);
+                }
+            case "buttonMenuShowIngredients":
+                if(!focusFrame(showIngredients)) {
+                    showIngredients = new ShowIngredients(this);
                 }
         }
     }

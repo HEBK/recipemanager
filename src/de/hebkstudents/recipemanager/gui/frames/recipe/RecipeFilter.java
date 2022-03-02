@@ -4,11 +4,11 @@ import javax.swing.*;
 
 public class RecipeFilter {
     private JPanel root;
-    private JButton suchenButton;
+    private JButton searchButton;
     private JTextField textField1;
-    private JComboBox comboBox1;
-    private JComboBox comboBox2;
-    private JComboBox comboBox3;
-    private JCheckBox vegetarischCheckBox;
+    private JComboBox categoryComboBox;
+    private JComboBox difficultyComboBox;
+    private JComboBox timeComboBox;
+    private JCheckBox vegetarianCheckBox;
     private JCheckBox veganCheckBox;
 }

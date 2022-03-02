@@ -101,14 +101,17 @@ public class GUIController implements ActionListener {
             case "buttonMenuShowRecipes":
                 if(!focusFrame(showRecipes)) {
                     showRecipes = new ShowRecipes(this);
+                break;
                 }
             case "buttonMenuShowIngredients":
                 if(!focusFrame(showIngredients)) {
                     showIngredients = new ShowIngredients(this);
+                break;
                 }
             case "buttonMenuAddRecipe":
                 if (!focusFrame(addRecipe)){
                     showRecipes = new ShowRecipes(this);
+                break;
                 }
             case "buttonRecipeFilter":
                 if (!focusFrame(recipeFilter)) {

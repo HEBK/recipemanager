@@ -1,4 +1,4 @@
-package de.hebkstudents.recipemanager.gui.frames.recipe;
+package de.hebkstudents.recipemanager.gui.frames.ingredient;
 
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;

@@ -5,8 +5,8 @@ import javax.swing.*;
 public class ShowIngredients {
     private JPanel root;
     private JButton filterButton;
-    private JButton zutatHinzufügenButton;
-    private JButton zutatLöschenButton;
-    private JButton zutatBearbeitenButton;
+    private JButton addIngredientButton;
+    private JButton deleteIngredientButton;
+    private JButton updateIngredientButton;
     private JTable table1;
 }

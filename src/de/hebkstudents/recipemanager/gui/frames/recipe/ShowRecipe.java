@@ -10,10 +10,10 @@ public class ShowRecipe extends AppFrame {
     private JPanel root;
     private JTextArea recipeName;
     private JTextArea description;
-    private JCheckBox vegetarischCheckBox;
+    private JCheckBox vegetarianCheckBox;
     private JCheckBox veganCheckBox;
-    private JButton umrechnenButton;
-    private JComboBox comboBox1;
+    private JButton convertButton;
+    private JComboBox portionComboBox;
     private JTable ingredientsTable;
 
     public ShowRecipe(GUIController controller) {

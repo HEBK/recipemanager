@@ -4,9 +4,9 @@ import javax.swing.*;
 
 public class IngredientFilter {
     private JPanel root;
-    private JButton suchenButton;
+    private JButton searchButton;
     private JTextField textField1;
     private JComboBox comboBox1;
-    private JCheckBox vegetarischCheckBox;
+    private JCheckBox vegetarianCheckBox;
     private JCheckBox veganCheckBox;
 }

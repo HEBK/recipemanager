@@ -21,6 +21,7 @@ public class GUIController implements ActionListener {
     private AppFrame menu;
     private AppFrame showRecipes;
     private AppFrame showIngredients;
+    private AppFrame addRecipe;
 
     public GUIController(RecipeManager app)
     {
@@ -103,6 +104,12 @@ public class GUIController implements ActionListener {
                 if(!focusFrame(showIngredients)) {
                     showIngredients = new ShowIngredients(this);
                 }
+            case "buttonMenuAddRecipe":
+                if (!focusFrame(addRecipe)){
+                    showRecipes = new ShowRecipes(this);
+                }
+            case "buttonRecipeFilter":
+                if (!focusFrame())
         }
     }
 }

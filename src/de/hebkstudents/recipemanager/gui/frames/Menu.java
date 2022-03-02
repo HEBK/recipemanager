@@ -36,5 +36,9 @@ public class Menu extends AppFrame {
         showRecipesButton.addActionListener(controller);
         ingredientsButton.setName("buttonMenuShowIngredients");
         ingredientsButton.addActionListener(controller);
+        addRecipeButton.setName("buttonMenuAddRecipe");
+        addRecipeButton.addActionListener(controller);
+        filterRecipesButton.setName("buttonRecipeFilter");
+        filterRecipesButton.addActionListener(controller);
     }
 }

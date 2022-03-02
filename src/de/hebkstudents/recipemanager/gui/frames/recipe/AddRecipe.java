@@ -17,10 +17,11 @@ public class AddRecipe extends AppFrame {
 
     public AddRecipe(GUIController controller) {
         super(controller, buildFrameTitle("Rezept hinzufügen"), new Dimension(600, 400), true);
+        init();
     }
 
     @Override
     protected void init() {
-
+        add(root);
     }
 }

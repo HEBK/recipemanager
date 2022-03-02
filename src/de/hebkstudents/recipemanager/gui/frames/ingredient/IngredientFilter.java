@@ -23,6 +23,6 @@ public class IngredientFilter extends AppFrame {
 
     @Override
     protected void init() {
-
+        add(root);
     }
 }

@@ -23,6 +23,6 @@ public class RecipeFilter extends AppFrame {
     }
     @Override
     protected void init() {
-
+        add(root);
     }
 }

@@ -22,6 +22,6 @@ public class AddIngredient extends AppFrame {
 
     @Override
     protected void init() {
-
+        add(root);
     }
 }

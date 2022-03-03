@@ -5,6 +5,8 @@ import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 
 import javax.swing.*;
 
+import java.awt.*;
+
 import static de.hebkstudents.recipemanager.storage.StaticProperties.DEFAULT_DIMENSION;
 
 public class RecipeFilter extends AppFrame {
@@ -25,5 +27,6 @@ public class RecipeFilter extends AppFrame {
     @Override
     protected void init() {
         add(root);
+        setMinimumSize(new Dimension(750,550));
     }
 }

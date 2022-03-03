@@ -23,5 +23,6 @@ public class AddRecipe extends AppFrame {
     @Override
     protected void init() {
         add(root);
+        setMinimumSize(new Dimension(750,550));
     }
 }

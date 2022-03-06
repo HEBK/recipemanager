@@ -16,7 +16,7 @@ public class DatabaseController {
 
     public static void initConnection(){
         try {
-            DriverManager.getConnection("jdbc:sqlite:" + STORAGE_PATH + "/data/mainRCMGRDB.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + STORAGE_PATH + "/data/mainRCMGRDB.db");
         } catch (SQLException e) {
             Logger.log(LogType.CRITICAL, "Database connection could not be initialized!");
             Logger.logException(e);

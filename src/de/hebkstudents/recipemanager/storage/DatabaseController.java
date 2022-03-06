@@ -19,7 +19,7 @@ public class DatabaseController {
             DriverManager.getConnection("jdbc:sqlite:" + STORAGE_PATH + "/data/mainRCMGRDB.db");
         } catch (SQLException e) {
             Logger.log(LogType.CRITICAL, "Database connection could not be initialized!");
-            Logger.log(LogType.CRITICAL, "-> " + ((e.getMessage().isEmpty() ? "Exception message is empty and can not be loaded!" : e.getMessage())));
+            Logger.logException(e);
             JOptionPane.showMessageDialog(null, "A critical error occoured:\n\n" + ((e.getMessage().isEmpty() ? "Exception message is empty and can not be loaded!" : e.getMessage())) + "\n\nA log file for this incident is available at:\n" + STORAGE_PATH + "/logs", "A critical error occoured", JOptionPane.ERROR_MESSAGE);
             RecipeManager.shutdownApp(-1);
         }
@@ -37,7 +37,7 @@ public class DatabaseController {
             Logger.log(LogType.SYSTEM, "SQLite database connection has been closed successfully!");
         } catch (SQLException e) {
             Logger.log(LogType.ERROR, "An error has been occoured while trying to close SQLite database connection! (SQLException)");
-            Logger.log(LogType.ERROR, "-> " + ((e.getMessage().isEmpty() ? "Exception message is empty and can not be loaded!" : e.getMessage())));
+            Logger.logException(e);
         }
     }
 }

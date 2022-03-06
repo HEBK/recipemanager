@@ -39,8 +39,6 @@ public class RecipeManager {
         // Initialize database connection
         DatabaseController.initConnection();
 
-        new DeveloperConsole(null);
-
         // Create & run GUI instance
         manager.setController(new GUIController(manager));
         manager.getController().run();

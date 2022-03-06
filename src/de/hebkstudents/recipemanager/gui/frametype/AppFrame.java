@@ -2,6 +2,8 @@ package de.hebkstudents.recipemanager.gui.frametype;
 
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.storage.StaticProperties;
+import eu.cr4zyfl1x.logger.LogType;
+import eu.cr4zyfl1x.logger.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +34,9 @@ public abstract class AppFrame extends JFrame {
         // Set GUI Controller
         this.setController(gc);
 
+        // Log Frame init
+        frameInitLog();
+
     }
 
     public AppFrame(GUIController gc, String title, int[] dim, boolean visible) {
@@ -51,6 +56,9 @@ public abstract class AppFrame extends JFrame {
         // Set GUI Controller
         this.setController(gc);
 
+        // Log Frame init
+        frameInitLog();
+
     }
 
     public AppFrame(GUIController gc, String title, boolean visible) {
@@ -66,6 +74,9 @@ public abstract class AppFrame extends JFrame {
 
         // Set GUI Controller
         this.setController(gc);
+
+        // Log Frame init
+        frameInitLog();
     }
 
     protected void setController(GUIController gc)
@@ -82,6 +93,12 @@ public abstract class AppFrame extends JFrame {
     {
         return APPNAME + " | " + title;
     }
+
+    private void frameInitLog()
+    {
+        if (Logger.isLoaded()) Logger.log(LogType.SYSTEM, "Initialized AppFrame '" + getName() + "[" + hashCode() + "]' as '" + getTitle() + "'");
+    }
+
 
     protected abstract void init();
 

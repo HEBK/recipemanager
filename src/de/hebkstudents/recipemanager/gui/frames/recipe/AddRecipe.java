@@ -8,12 +8,12 @@ import java.awt.*;
 
 public class AddRecipe extends AppFrame {
     private JPanel root;
-    private JTextArea textArea1;
     private JTable table1;
+    private JTextField textField1;
+    private JTextArea textArea1;
+    private JComboBox comboBox1;
+    private JSpinner spinner1;
     private JButton addRecipeButton;
-    private JComboBox difficultyComboBox;
-    private JTextPane textPane1;
-    private JTextArea textArea2;
 
     public AddRecipe(GUIController controller) {
         super(controller, buildFrameTitle("Rezept hinzufügen"), new Dimension(600, 400), true);
@@ -24,5 +24,6 @@ public class AddRecipe extends AppFrame {
     protected void init() {
         add(root);
         setMinimumSize(new Dimension(750,550));
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 }

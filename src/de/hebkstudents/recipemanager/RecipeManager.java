@@ -2,6 +2,8 @@ package de.hebkstudents.recipemanager;
 
 import com.bulenkov.darcula.DarculaLaf;
 import de.hebkstudents.recipemanager.gui.GUIController;
+import de.hebkstudents.recipemanager.gui.frames.other.DeveloperConsole;
+import de.hebkstudents.recipemanager.storage.DatabaseController;
 import de.hebkstudents.recipemanager.storage.StaticProperties;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
@@ -33,6 +35,11 @@ public class RecipeManager {
 
         // Create instance of App
         RecipeManager manager = new RecipeManager();
+
+        // Initialize database connection
+        DatabaseController.initConnection();
+
+        new DeveloperConsole(null);
 
         // Create & run GUI instance
         manager.setController(new GUIController(manager));
@@ -86,6 +93,23 @@ public class RecipeManager {
                 Logger.log(LogType.ERROR, "One or more drivers could not be loaded!\n" + e.getMessage());
             }
         }
+    }
+
+    /**
+     * Sends shutdown request with specific exit code
+     * @param status Exit code
+     */
+    public static void shutdownApp(int status)
+    {
+        if (status == -1) {
+            Logger.log(LogType.CRITICAL, "An critical error occoured. Exiting process immediately ...");
+            System.exit(status);
+        }
+        Logger.log(LogType.SYSTEM, "Received app shutdown request ... (Status code: " + status + ")");
+        DatabaseController.closeConnection();
+
+        Logger.log(LogType.SYSTEM, "Finishing process with exit code " + status + " ...");
+        System.exit(status);
     }
 
     private GUIController controller;

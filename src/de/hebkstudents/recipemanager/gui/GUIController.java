@@ -3,6 +3,7 @@ package de.hebkstudents.recipemanager.gui;
 import de.hebkstudents.recipemanager.RecipeManager;
 import de.hebkstudents.recipemanager.gui.frames.Menu;
 import de.hebkstudents.recipemanager.gui.frames.ingredient.ShowIngredients;
+import de.hebkstudents.recipemanager.gui.frames.other.DeveloperConsole;
 import de.hebkstudents.recipemanager.gui.frames.recipe.AddRecipe;
 import de.hebkstudents.recipemanager.gui.frames.recipe.RecipeFilter;
 import de.hebkstudents.recipemanager.gui.frames.recipe.ShowRecipes;
@@ -25,6 +26,7 @@ public class GUIController implements ActionListener {
     private AppFrame showIngredients;
     private AppFrame recipeFilter;
     private AppFrame addRecipe;
+    private AppFrame developerConsole;
 
     public GUIController(RecipeManager app)
     {
@@ -92,6 +94,13 @@ public class GUIController implements ActionListener {
             return true;
         }
         return false;
+    }
+
+    public void openDeveloperConsole()
+    {
+        if (!focusFrame(developerConsole)) {
+            developerConsole = new DeveloperConsole(this);
+        }
     }
 
 

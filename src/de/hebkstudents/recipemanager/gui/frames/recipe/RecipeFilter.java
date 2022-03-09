@@ -18,7 +18,10 @@ public class RecipeFilter extends AppFrame {
     private JCheckBox vegetarianCheckBox;
     private JCheckBox veganCheckBox;
     private JButton searchButton;
-    private JList list1;
+    private JComboBox comboBox1;
+    private JComboBox comboBox2;
+    private JComboBox comboBox3;
+    private JComboBox comboBox4;
 
     public RecipeFilter(GUIController controller) {
         super(controller, buildFrameTitle("Rezeptefilter"), DEFAULT_DIMENSION, true);

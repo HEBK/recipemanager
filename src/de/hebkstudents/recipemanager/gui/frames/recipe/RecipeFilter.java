@@ -11,17 +11,17 @@ import static de.hebkstudents.recipemanager.storage.StaticProperties.DEFAULT_DIM
 
 public class RecipeFilter extends AppFrame {
     private JPanel root;
-    private JTextField textField1;
-    private JComboBox categoryComboBox;
-    private JComboBox difficultyComboBox;
-    private JComboBox timeComboBox;
-    private JCheckBox vegetarianCheckBox;
-    private JCheckBox veganCheckBox;
-    private JButton searchButton;
     private JComboBox comboBox1;
+    private JTextField textField1;
     private JComboBox comboBox2;
     private JComboBox comboBox3;
     private JComboBox comboBox4;
+    private JComboBox comboBox5;
+    private JComboBox comboBox6;
+    private JComboBox comboBox7;
+    private JCheckBox vegetarischCheckBox;
+    private JCheckBox veganCheckBox;
+    private JButton suchenButton;
 
     public RecipeFilter(GUIController controller) {
         super(controller, buildFrameTitle("Rezeptefilter"), DEFAULT_DIMENSION, true);

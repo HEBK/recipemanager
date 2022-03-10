@@ -1,5 +1,6 @@
 package de.hebkstudents.recipemanager.gui.frames.other;
 
+import de.hebkstudents.recipemanager.RecipeManager;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 import eu.cr4zyfl1x.logger.LogType;
@@ -12,22 +13,23 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static de.hebkstudents.recipemanager.storage.StaticProperties.DEFAULT_DIMENSION;
-import static de.hebkstudents.recipemanager.storage.StaticProperties.STORAGE_PATH;
+import static de.hebkstudents.recipemanager.storage.StaticProperties.*;
 
 public class DeveloperConsole extends AppFrame {
     private JPanel root;
     private JTextPane consolePane;
     private JButton closeConsoleButton;
     private JScrollPane consoleScrollPane;
-    private JTextField textField1;
+    private JTextField commandTextfield;
     private JButton executeButton;
     private JButton openLogfileDirButton;
     private JButton consoleLogUpdateButton;
+    private JButton openLogfileButton;
 
     public DeveloperConsole (GUIController controller)
     {
@@ -60,9 +62,21 @@ public class DeveloperConsole extends AppFrame {
 
         consoleLogUpdateButton.addActionListener(e -> consoleLogUpdate());
 
-        textField1.requestFocus();
-    }
+        commandTextfield.requestFocus();
 
+        openLogfileButton.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().open(Logger.getLogger().getLogfile());
+                Logger.log(LogType.INFORMATION, "Opened logfile for current runtime '" + Logger.getLogger().getLogfileName() + "'.");
+            } catch (IOException ex) {
+                Logger.log(LogType.ERROR, "Can not open logfile!");
+                Logger.logException(ex);
+            }
+        });
+
+        executeButton.addActionListener(e -> runCommand());
+        commandTextfield.addActionListener(e -> runCommand());
+    }
 
     private void consoleLogUpdater()
     {
@@ -82,16 +96,57 @@ public class DeveloperConsole extends AppFrame {
                 line = reader.readLine();
             }
             consolePane.setCaretPosition(consolePane.getDocument().getLength());
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "An error occoured!\n\n" + e);
+            dispose();
+        }
     }
 
+    private void runCommand()
+    {
+        String commandInput = commandTextfield.getText();
+        String[] parsedCommand = commandInput.split(" ");
 
+        if (commandInput.isEmpty()) { commandTextfield.requestFocus(); return; }
 
+        executeButton.setEnabled(false);
+        commandTextfield.setEnabled(false);
 
+        Thread commandThread = new Thread(() -> {
+            Logger.log(new LogType("DEVELOPER", Color.GRAY), "User has executed command '" + commandInput + "'");
+            consoleLogUpdate();
+            try { Thread.sleep(500); } catch (InterruptedException ignored) {}
 
+            switch (parsedCommand[0].toLowerCase()) {
+                case "help":
+                    break;
+                case "version":
+                    Logger.log(LogType.INFORMATION, "You're running " + APPNAME + " v" + VERSION);
+                    break;
+                case "exit":
+                    if (parsedCommand.length > 1 && parsedCommand[1].equalsIgnoreCase("confirm")) RecipeManager.shutdownApp(0);
+                    Logger.log(LogType.INFORMATION, "Please type 'exit confirm' to exit this application!");
+                    break;
+                case "close":
+                    Logger.log(LogType.INFORMATION, "Closing DevConsole frame...");
+                    dispose();
+                    break;
+                default:
+                    Logger.log(LogType.ERROR, "The command '" + parsedCommand[0] + "' does not exist!");
+            }
 
+            // Update console output
+            consoleLogUpdate();
 
+            // Reset inputs
+            commandTextfield.setText(null);
+            executeButton.setEnabled(true);
+            commandTextfield.setEnabled(true);
+            commandTextfield.requestFocus();
+        });
 
-
+        // Start command execution
+        commandThread.start();
+    }
 
 }

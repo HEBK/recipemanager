@@ -16,6 +16,7 @@ public class ShowIngredients extends AppFrame {
     private JButton deleteIngredientButton;
     private JButton updateIngredientButton;
     private JTable table1;
+    private JButton closeButton;
 
     public ShowIngredients(GUIController controller) {
         super(controller, buildFrameTitle("Zutatenliste"), DEFAULT_DIMENSION, true);

@@ -25,7 +25,6 @@ public class DatabaseController {
         }
     }
 
-
     public static void closeConnection() {
         Logger.log(LogType.SYSTEM, "Closing SQLite database connection ...");
         if (connection == null) {
@@ -39,5 +38,9 @@ public class DatabaseController {
             Logger.log(LogType.ERROR, "An error has been occoured while trying to close SQLite database connection! (SQLException)");
             Logger.logException(e);
         }
+    }
+
+    public static Connection getConnection() {
+        return connection;
     }
 }

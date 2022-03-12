@@ -1,6 +1,6 @@
 CREATE TABLE RecipeCategory (
-    `categoryID`    INT(10) NOT NULL PRIMARY KEY,
-    `name`          VARCHAR(255) NULL DEFAULT NULL COLLATE utf8_unicode_ci
+    `categoryID`        INT(10) NOT NULL PRIMARY KEY,
+    `name`              VARCHAR(255) NULL DEFAULT NULL COLLATE utf8_unicode_ci
 );
 
 CREATE TABLE Recipe (

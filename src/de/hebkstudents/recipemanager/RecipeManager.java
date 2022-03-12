@@ -2,24 +2,33 @@ package de.hebkstudents.recipemanager;
 
 import com.bulenkov.darcula.DarculaLaf;
 import de.hebkstudents.recipemanager.gui.GUIController;
-import de.hebkstudents.recipemanager.gui.frames.other.DeveloperConsole;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
-import de.hebkstudents.recipemanager.storage.StaticProperties;
+import de.hebkstudents.recipemanager.storage.StorageBackend;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
+import eu.cr4zyfl1x.logger.exception.InvalidLoggerException;
 
 import javax.swing.*;
+import java.io.File;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
 
-import static de.hebkstudents.recipemanager.storage.StaticProperties.APPNAME;
-import static de.hebkstudents.recipemanager.storage.StaticProperties.STORAGE_PATH;
+import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
 public class RecipeManager {
 
-    public static void main(String[] args) throws SQLException {
+    /**
+     * Main method
+     * @param args Startup arguments
+     * @throws SQLException if driver registration fails
+     */
+    public static void main(String[] args) throws SQLException, InvalidLoggerException {
+
+        // Storage backend
+        initializeStorageBackend();
 
         // Initialize logger
         initLogger();
@@ -37,7 +46,7 @@ public class RecipeManager {
         RecipeManager manager = new RecipeManager();
 
         // Initialize database connection
-        DatabaseController.initConnection();
+        initializeDatabase();
 
         // Create & run GUI instance
         manager.setController(new GUIController(manager));
@@ -48,13 +57,44 @@ public class RecipeManager {
     }
 
     /**
+     * Initialize FileSystem Storage Backend
+     */
+    private static void initializeStorageBackend() throws InvalidLoggerException {
+        // Temporary logger
+        Logger.load(new Logger("RM_TEMP", new Date()));
+        Logger.log(LogType.SYSTEM, "Initializing filesystem storage backend ...");
+        STORAGE_BACKEND = new StorageBackend(STORAGE_PATH, new String[]{"config", "data", "logs", "images/recipes"});
+        DB_STRUCTURE_INITIALIZED = STORAGE_BACKEND.directoriesExist();
+        if (!DB_STRUCTURE_INITIALIZED) {
+            Logger.log(LogType.SYSTEM, "Creating necessary directories in '" + STORAGE_BACKEND.getRootDirectory() + "' ...");
+            for (File dir: STORAGE_BACKEND.getSubDirectories()) {
+                Logger.log(LogType.INFORMATION, "-> " + dir);
+            }
+            STORAGE_BACKEND.createDirectories();
+        }
+    }
+
+    /**
+     * Initialize Database
+     */
+    private static void initializeDatabase()
+    {
+        DatabaseController.initConnection();
+        if (!DB_STRUCTURE_INITIALIZED) {
+            DatabaseController.executeStatementsFromFile(new File(DB_STRUCTURE_TEMPLATE), false, false);
+            DatabaseController.initConnection();
+            DatabaseController.executeStatementsFromFile(new File(DB_DATA_TEMPLATE), false, false);
+        }
+    }
+
+    /**
      * Initialize Logger
      */
     private static void initLogger() {
         Logger logger = new Logger("RecipeManager", new Date(), STORAGE_PATH + "/logs");
         logger.load();
         Logger.log(LogType.SYSTEM, "Logger initialization completed!");
-        Logger.log(LogType.INFORMATION, StaticProperties.APPNAME + " - Version: " + StaticProperties.VERSION);
+        Logger.log(LogType.INFORMATION, APPNAME + " - Version: " + VERSION);
     }
 
     /**
@@ -109,6 +149,10 @@ public class RecipeManager {
         Logger.log(LogType.SYSTEM, "Finishing process with exit code " + status + " ...");
         System.exit(status);
     }
+
+    /*
+     * ---------------------------------
+     */
 
     private GUIController controller;
     public void setController(GUIController controller) {

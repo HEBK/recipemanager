@@ -4,10 +4,9 @@ import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 
 import javax.swing.*;
-
 import java.awt.*;
 
-import static de.hebkstudents.recipemanager.storage.StaticProperties.DEFAULT_DIMENSION;
+import static de.hebkstudents.recipemanager.storage.AppProperties.DEFAULT_DIMENSION;
 
 public class AddIngredient extends AppFrame {
     private JPanel root;

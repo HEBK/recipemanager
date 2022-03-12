@@ -1,14 +1,15 @@
 package de.hebkstudents.recipemanager.gui.frametype;
 
 import de.hebkstudents.recipemanager.gui.GUIController;
-import de.hebkstudents.recipemanager.storage.StaticProperties;
+import de.hebkstudents.recipemanager.storage.AppProperties;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static de.hebkstudents.recipemanager.storage.StaticProperties.APPNAME;
+import static de.hebkstudents.recipemanager.storage.AppProperties.APPNAME;
+import static de.hebkstudents.recipemanager.storage.AppProperties.FRAME_ICON;
 
 public abstract class AppFrame extends JFrame {
 
@@ -26,7 +27,7 @@ public abstract class AppFrame extends JFrame {
         this.setSize(dim);
 
         // Frame icon
-        this.setIconImage(StaticProperties.FRAME_ICON.getImage());
+        this.setIconImage(FRAME_ICON.getImage());
 
         // Set Visibility
         this.setVisible(visible);
@@ -48,7 +49,7 @@ public abstract class AppFrame extends JFrame {
         if (dim.length == 2) this.setSize(dim[0], dim[1]);
 
         // Frame icon
-        this.setIconImage(StaticProperties.FRAME_ICON.getImage());
+        this.setIconImage(FRAME_ICON.getImage());
 
         // Set Visibility
         this.setVisible(visible);
@@ -67,7 +68,7 @@ public abstract class AppFrame extends JFrame {
         super(title);
 
         // Frame icon
-        this.setIconImage(StaticProperties.FRAME_ICON.getImage());
+        this.setIconImage(FRAME_ICON.getImage());
 
         // Set Visibility
         this.setVisible(visible);

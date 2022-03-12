@@ -3,18 +3,15 @@ package de.hebkstudents.recipemanager.gui.frames;
 import de.hebkstudents.recipemanager.RecipeManager;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
-import de.hebkstudents.recipemanager.recipe.Recipe;
-import eu.cr4zyfl1x.logger.Logger;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import static de.hebkstudents.recipemanager.storage.StaticProperties.*;
+import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
 public class Menu extends AppFrame {
     private JPanel root;

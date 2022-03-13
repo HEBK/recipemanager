@@ -1,6 +1,7 @@
 package de.hebkstudents.recipemanager;
 
 import com.bulenkov.darcula.DarculaLaf;
+import de.hebkstudents.recipemanager.exception.IngredientCategoryNotFoundException;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import de.hebkstudents.recipemanager.storage.StorageBackend;
@@ -13,7 +14,6 @@ import java.io.File;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Date;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
@@ -54,6 +54,14 @@ public class RecipeManager {
 
         // Log end of main
         Logger.log(LogType.SYSTEM, "App " + APPNAME + " successfully loaded!");
+
+        // Only for testing
+        testing();
+    }
+
+    private static void testing()
+    {
+//        System.out.println(Logger.getVersion());
     }
 
     /**

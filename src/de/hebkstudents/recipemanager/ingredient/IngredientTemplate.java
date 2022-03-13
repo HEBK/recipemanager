@@ -1,17 +1,25 @@
 package de.hebkstudents.recipemanager.ingredient;
 
-public class IngredientTemplate {
+public abstract class IngredientTemplate {
     //Attribute
     private String name;
     private boolean isVegan;
     private boolean isVegetarian;
+    private final IngredientCategory category;
 
 
     //Konstruktor
+    public IngredientTemplate(String name, boolean isVegan, boolean isVegetarian, IngredientCategory category)
+    {
+        this.name = name;
+        this.isVegan = isVegan;
+        this.isVegetarian = isVegetarian;
+        this.category = category;
+    }
 
     //Methoden
-    private IngredientCategory getIngredientCategory() {
-        return null;
+    public IngredientCategory getIngredientCategory() {
+        return category;
     }
 
     //get-/setter

@@ -2,6 +2,9 @@ package de.hebkstudents.recipemanager.gui.frames.recipe;
 
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
+import de.hebkstudents.recipemanager.ingredient.Ingredient;
+import de.hebkstudents.recipemanager.ingredient.IngredientController;
+import de.hebkstudents.recipemanager.storage.DatabaseController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -34,12 +37,27 @@ public class ShowRecipes extends AppFrame {
     private void setTable (){
         String[] headrow = {"Name", "Kategorie", "Schwierigkeit", "Vegetarisch", "Vegan", "Zeit"};
 
-        String[][] rows = {{"Spaghetti", "Pasta", "einfach", "ja", "ja", "15 Minuten"}, {"Tiefkühlpizza", "Pizza", "einfach", "nein", "nein", "10 Minuten"}};
+        Object[][] rows = {};
 
         recipesTableModel = new DefaultTableModel(rows, headrow) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                switch (columnIndex) {
+                    case 0:
+                    case 5:
+                    case 2:
+                    case 1:
+                        return String.class;
+                    case 3:
+                    case 4:
+                        return Boolean.class;
+                    default: return null;
+                }
             }
         };
         table1 = new JTable(recipesTableModel);

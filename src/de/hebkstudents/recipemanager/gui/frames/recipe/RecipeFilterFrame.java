@@ -8,7 +8,7 @@ import java.awt.*;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.DEFAULT_DIMENSION;
 
-public class RecipeFilter extends AppFrame {
+public class RecipeFilterFrame extends AppFrame {
     private JPanel root;
     private JCheckBox vegetarischCheckBox;
     private JCheckBox veganCheckBox;
@@ -23,7 +23,7 @@ public class RecipeFilter extends AppFrame {
     private JComboBox comboBox2;
     private JTextField textField1;
 
-    public RecipeFilter(GUIController controller) {
+    public RecipeFilterFrame(GUIController controller) {
         super(controller, buildFrameTitle("Rezeptefilter"), DEFAULT_DIMENSION, true);
         init();
     }

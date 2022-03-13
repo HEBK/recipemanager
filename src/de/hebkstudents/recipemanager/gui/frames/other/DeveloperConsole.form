@@ -104,7 +104,7 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <font name="Segoe UI"/>
+                  <font name="Consolas"/>
                 </properties>
               </component>
               <component id="d0d03" class="javax.swing.JButton" binding="executeButton">

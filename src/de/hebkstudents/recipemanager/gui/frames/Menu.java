@@ -22,33 +22,13 @@ public class Menu extends AppFrame {
     private JButton ingredientsButton;
     private JButton closeButton;
     private JLabel versionLabel;
+    private JButton developerConsoleButton;
 
-
-    private boolean ctrl = false;
-    private boolean shift = false;
-    private boolean D = false;
 
     public Menu(GUIController controller)
     {
         super(controller, buildFrameTitle("Hauptmenü"), DEFAULT_DIMENSION, true);
         init();
-
-
-        this.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-
-                if (e.getKeyCode() == KeyEvent.VK_D) { D = true; }
-                if (e.getKeyCode() == KeyEvent.VK_SHIFT) { shift = true; }
-                if (e.getKeyCode() == KeyEvent.VK_CONTROL) { ctrl = true; }
-
-                if (ctrl && D && shift) {
-                    controller.openDeveloperConsole();
-                    ctrl = false; shift = false;  D = false;
-                }
-            }
-        });
     }
 
     @Override
@@ -65,13 +45,15 @@ public class Menu extends AppFrame {
 
 
 
-        setMinimumSize(new Dimension(750, 550));
+        setMinimumSize(new Dimension(750, 580));
         versionLabel.setText("v" + VERSION);
         appnameLabel.setText(APPNAME);
 
         closeButton.addActionListener(e -> {
             RecipeManager.shutdownApp(0);
         });
+
+        developerConsoleButton.addActionListener(e -> getController().openDeveloperConsole());
 
 
 

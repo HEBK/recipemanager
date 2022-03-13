@@ -3,6 +3,7 @@ package de.hebkstudents.recipemanager.gui.frames.other;
 import de.hebkstudents.recipemanager.RecipeManager;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
+import de.hebkstudents.recipemanager.ingredient.IngredientController;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 
@@ -126,6 +127,20 @@ public class DeveloperConsole extends AppFrame {
                 case "exit":
                     if (parsedCommand.length > 1 && parsedCommand[1].equalsIgnoreCase("confirm")) RecipeManager.shutdownApp(0);
                     Logger.log(LogType.INFORMATION, "Please type 'exit confirm' to exit this application!");
+                    break;
+                case "ingredient":
+                    if (parsedCommand.length == 3) {
+                        if (parsedCommand[1].equalsIgnoreCase("delete")) {
+                            try {
+                                int ingredientID = Integer.parseInt(parsedCommand[2]);
+                                IngredientController.deleteIngredient(ingredientID);
+                            } catch (NumberFormatException e) {
+                                Logger.log(LogType.ERROR, "IngredientID must be type of integer!");
+                            }
+                            break;
+                        }
+                    }
+                    Logger.log(LogType.INFORMATION, "Command syntax: ingredient <add|delete|modify> <ID>");
                     break;
                 case "close":
                     Logger.log(LogType.INFORMATION, "Closing DevConsole frame...");

@@ -2,12 +2,15 @@ package de.hebkstudents.recipemanager.gui;
 
 import de.hebkstudents.recipemanager.RecipeManager;
 import de.hebkstudents.recipemanager.gui.frames.Menu;
+import de.hebkstudents.recipemanager.gui.frames.ingredient.AddIngredient;
+import de.hebkstudents.recipemanager.gui.frames.ingredient.IngredientFilterFrame;
 import de.hebkstudents.recipemanager.gui.frames.ingredient.ShowIngredients;
 import de.hebkstudents.recipemanager.gui.frames.other.DeveloperConsole;
 import de.hebkstudents.recipemanager.gui.frames.recipe.AddRecipe;
-import de.hebkstudents.recipemanager.gui.frames.recipe.RecipeFilter;
+import de.hebkstudents.recipemanager.gui.frames.recipe.RecipeFilterFrame;
 import de.hebkstudents.recipemanager.gui.frames.recipe.ShowRecipes;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
+import de.hebkstudents.recipemanager.ingredient.IngredientFilter;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 
@@ -24,9 +27,11 @@ public class GUIController implements ActionListener {
     private AppFrame menu;
     private AppFrame showRecipes;
     private AppFrame showIngredients;
-    private AppFrame recipeFilter;
+    private AppFrame recipeFilterFrame;
     private AppFrame addRecipe;
     private AppFrame developerConsole;
+    private AppFrame ingredientFilterFrame;
+    private AppFrame addIngredientFrame;
 
     public GUIController(RecipeManager app)
     {
@@ -103,31 +108,76 @@ public class GUIController implements ActionListener {
         }
     }
 
+    public void openFrameShowRecipes()
+    {
+        if(!focusFrame(showRecipes)) {
+            showRecipes = new ShowRecipes(this);
+        }
+    }
+
+    public void openFrameShowIngredients(IngredientFilter filter)
+    {
+        if (ingredientFilterFrame != null) {
+            ingredientFilterFrame.dispose();
+            ingredientFilterFrame = null;
+        }
+        if (addIngredientFrame != null) {
+            addIngredientFrame.dispose();
+            addIngredientFrame = null;
+        }
+        if(!focusFrame(showIngredients)) {
+            showIngredients = new ShowIngredients(this, (filter != null) ? filter : new IngredientFilter(null, null, null, null, null));
+        }
+    }
+
+    public void openFrameAddRecipe()
+    {
+        if (!focusFrame(addRecipe)){
+            addRecipe = new AddRecipe(this);
+        }
+    }
+
+    public void openFrameRecipeFilter()
+    {
+        if (!focusFrame(recipeFilterFrame)) {
+            recipeFilterFrame = new RecipeFilterFrame(this);
+        }
+    }
+
+    private void openFrameIngredientFilter()
+    {
+        if (showIngredients != null) {
+            showIngredients.dispose();
+            showIngredients = null;
+        }
+        if (!focusFrame(ingredientFilterFrame)) {
+            ingredientFilterFrame = new IngredientFilterFrame(this);
+        }
+    }
+
+    private void openFrameAddIngredient()
+    {
+        if (showIngredients != null) {
+            showIngredients.dispose();
+            showIngredients = null;
+        }
+        if (!focusFrame(addIngredientFrame)) {
+            addIngredientFrame = new AddIngredient(this);
+        }
+
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String componentID = ((Component) e.getSource()).getName();
         switch (componentID) {
-            case "buttonMenuShowRecipes":
-                if(!focusFrame(showRecipes)) {
-                    showRecipes = new ShowRecipes(this);
-                }
-                break;
-            case "buttonMenuShowIngredients":
-                if(!focusFrame(showIngredients)) {
-                    showIngredients = new ShowIngredients(this);
-                }
-                break;
-            case "buttonMenuAddRecipe":
-                if (!focusFrame(addRecipe)){
-                    addRecipe = new AddRecipe(this);
-                }
-                break;
-            case "buttonRecipeFilter":
-                if (!focusFrame(recipeFilter)) {
-                    recipeFilter = new RecipeFilter(this);
-                }
-                break;
+            case "buttonMenuShowRecipes" -> openFrameShowRecipes();
+            case "buttonMenuShowIngredients" -> openFrameShowIngredients(null);
+            case "buttonMenuAddRecipe" -> openFrameAddRecipe();
+            case "buttonRecipeFilter" -> openFrameRecipeFilter();
+            case "buttonIngredientFilter" -> openFrameIngredientFilter();
+            case "buttonIngredientsAddIngredient" -> openFrameAddIngredient();
+            default -> JOptionPane.showMessageDialog(null, "Action not found!\n\nAction: " + componentID, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

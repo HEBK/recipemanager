@@ -1,6 +1,6 @@
 CREATE TABLE RecipeCategory (
     `categoryID`        INTEGER PRIMARY KEY,
-    `name`              VARCHAR(255) NULL DEFAULT NULL
+    `name`              VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE Recipe (
@@ -21,7 +21,7 @@ CREATE TABLE IngredientCategory (
 
 CREATE TABLE Ingredient (
     `ingredientID`      INTEGER PRIMARY KEY,
-    `name`              VARCHAR(255) NULL DEFAULT NULL,
+    `name`              VARCHAR(255) UNIQUE NOT NULL,
     `isVegan`           BOOLEAN NOT NULL DEFAULT FALSE,
     `isVegetarian`      BOOLEAN NOT NULL DEFAULT FALSE,
     `category`          INT NOT NULL REFERENCES `IngredientCategory`(`categoryID`)

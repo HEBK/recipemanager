@@ -1,6 +1,7 @@
 package de.hebkstudents.recipemanager.gui.frames.other;
 
 import de.hebkstudents.recipemanager.RecipeManager;
+import de.hebkstudents.recipemanager.exception.IngredientNotFoundException;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 import de.hebkstudents.recipemanager.ingredient.IngredientController;
@@ -136,6 +137,8 @@ public class DeveloperConsole extends AppFrame {
                                 IngredientController.deleteIngredient(ingredientID);
                             } catch (NumberFormatException e) {
                                 Logger.log(LogType.ERROR, "IngredientID must be type of integer!");
+                            } catch (IngredientNotFoundException e) {
+                                Logger.log(LogType.ERROR, "Ingredient not found!");
                             }
                             break;
                         }

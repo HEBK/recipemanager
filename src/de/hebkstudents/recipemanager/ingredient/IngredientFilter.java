@@ -9,6 +9,7 @@ public class IngredientFilter implements SimpleFilter {
     private final Boolean isVegetarian;
     private final IngredientCategory category;
     private final Integer ingredientID;
+    private String sqlOptions = null;
 
     public IngredientFilter(String query, Boolean isVegan, Boolean isVegetarian, IngredientCategory category, Integer ingredientID)
     {
@@ -19,9 +20,20 @@ public class IngredientFilter implements SimpleFilter {
         this.ingredientID = ingredientID;
     }
 
+    public IngredientFilter(String sqlOptions)
+    {
+        this.query = null;
+        this.isVegan = null;
+        this.isVegetarian = null;
+        this.category = null;
+        this.ingredientID = null;
+        this.sqlOptions = sqlOptions;
+    }
+
     @Override
     public String getSQLOptions()
     {
+        if (sqlOptions != null) return sqlOptions;
         if (query == null && isVegetarian == null && isVegan == null && category == null) return null;
 
         String categoryVal = (category != null) ? String.valueOf(category.getCategoryID()) : "";

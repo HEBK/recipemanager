@@ -3,13 +3,15 @@ package de.hebkstudents.recipemanager.gui.frames;
 import de.hebkstudents.recipemanager.RecipeManager;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
+import eu.cr4zyfl1x.logger.LogType;
+import eu.cr4zyfl1x.logger.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
@@ -23,6 +25,7 @@ public class Menu extends AppFrame {
     private JButton closeButton;
     private JLabel versionLabel;
     private JButton developerConsoleButton;
+    private JButton dataFolderButton;
 
 
     public Menu(GUIController controller)
@@ -54,6 +57,15 @@ public class Menu extends AppFrame {
         });
 
         developerConsoleButton.addActionListener(e -> getController().openDeveloperConsole());
+        dataFolderButton.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().open(new File(STORAGE_PATH));
+                Logger.log(LogType.INFORMATION, "Opened storage directory '" +STORAGE_PATH + "' in explorer.");
+            } catch (IOException exception) {
+                Logger.log(LogType.ERROR, "Can not open storage directory!");
+                Logger.logException(exception);
+            }
+        });
 
 
 

@@ -7,9 +7,11 @@ import de.hebkstudents.recipemanager.gui.frames.ingredient.IngredientFilterFrame
 import de.hebkstudents.recipemanager.gui.frames.ingredient.ShowIngredients;
 import de.hebkstudents.recipemanager.gui.frames.other.DeveloperConsole;
 import de.hebkstudents.recipemanager.gui.frames.recipe.AddRecipe;
+import de.hebkstudents.recipemanager.gui.frames.recipe.AddRecipeIngredient;
 import de.hebkstudents.recipemanager.gui.frames.recipe.RecipeFilterFrame;
 import de.hebkstudents.recipemanager.gui.frames.recipe.ShowRecipes;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
+import de.hebkstudents.recipemanager.ingredient.Ingredient;
 import de.hebkstudents.recipemanager.ingredient.IngredientFilter;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
@@ -28,10 +30,11 @@ public class GUIController implements ActionListener {
     private AppFrame showRecipes;
     private AppFrame showIngredients;
     private AppFrame recipeFilterFrame;
-    private AppFrame addRecipe;
+    private AddRecipe addRecipe;
     private AppFrame developerConsole;
     private AppFrame ingredientFilterFrame;
     private AppFrame addIngredientFrame;
+    private AppFrame addRecipeIngredientFrame;
 
     public GUIController(RecipeManager app)
     {
@@ -167,6 +170,35 @@ public class GUIController implements ActionListener {
 
     }
 
+    private void openFrameAddRecipeIngredient()
+    {
+        if (!focusFrame(addRecipeIngredientFrame)) {
+            addRecipeIngredientFrame = new AddRecipeIngredient(this);
+        }
+    }
+
+    public void closeFrameAddRecipeIngredient()
+    {
+        if (addRecipeIngredientFrame != null) {
+            addRecipeIngredientFrame.dispose();
+            addRecipeIngredientFrame = null;
+        }
+    }
+
+    public boolean addIngredientToRecipe(Ingredient g)
+    {
+        if (addRecipe != null) {
+            return addRecipe.addIngredient(g);
+        } else {
+            new Thread(() -> {
+                JOptionPane.showMessageDialog(null, "A critical error occoured!\n\nSee log for more information.", "Error", JOptionPane.ERROR_MESSAGE);
+                RecipeManager.shutdownApp(500);
+            });
+            Logger.log(LogType.CRITICAL, "A critical error occoured while trying to add ingredient to recipe! Cannot add ingredient to recipe because no recipe is being created!");
+        }
+        return false;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String componentID = ((Component) e.getSource()).getName();
@@ -177,6 +209,7 @@ public class GUIController implements ActionListener {
             case "buttonRecipeFilter" -> openFrameRecipeFilter();
             case "buttonIngredientFilter" -> openFrameIngredientFilter();
             case "buttonIngredientsAddIngredient" -> openFrameAddIngredient();
+            case "buttonAddRecipeAddRecipeIngredient" -> openFrameAddRecipeIngredient();
             default -> JOptionPane.showMessageDialog(null, "Action not found!\n\nAction: " + componentID, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

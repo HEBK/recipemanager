@@ -1,10 +1,12 @@
 package de.hebkstudents.recipemanager.gui.frames.ingredient;
 
+import de.hebkstudents.recipemanager.exception.IngredientNotFoundException;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 import de.hebkstudents.recipemanager.ingredient.Ingredient;
 import de.hebkstudents.recipemanager.ingredient.IngredientController;
 import de.hebkstudents.recipemanager.ingredient.IngredientFilter;
+import eu.cr4zyfl1x.logger.Logger;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -65,18 +67,23 @@ public class ShowIngredients extends AppFrame {
 
                 // Ask if ingredient should really be deleted
                 if (JOptionPane.showConfirmDialog(this, "Möchten Sie die ausgewählte Zutat wirklich löschen?", buildFrameTitle("Zutat löschen"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    if (IngredientController.deleteIngredient(ingredientID)) {
+                    try {
+                        if (IngredientController.deleteIngredient(ingredientID)) {
 
-                        // Show success msg
-                        new Thread(() -> JOptionPane.showMessageDialog(a, "Die Zutat wurde erfolgreich gelöscht!", buildFrameTitle("Zutat gelöscht"), JOptionPane.INFORMATION_MESSAGE)).start();
+                            // Show success msg
+                            new Thread(() -> JOptionPane.showMessageDialog(a, "Die Zutat wurde erfolgreich gelöscht!", buildFrameTitle("Zutat gelöscht"), JOptionPane.INFORMATION_MESSAGE)).start();
 
-                        // Delete Row from Table
-                        ingredientsTableModel.removeRow(selectedRow);
+                            // Delete Row from Table
+                            ingredientsTableModel.removeRow(selectedRow);
 
-                        // Set Count label
-                        setCountLabel(ingredientsTable.getRowCount());
-                    } else {
+                            // Set Count label
+                            setCountLabel(ingredientsTable.getRowCount());
+                        } else {
+                            new Thread(() -> JOptionPane.showMessageDialog(a, "Beim Löschen der Zutat ist ein Fehler aufgetreten!\n\nWeitere Informationen können Sie dem Log entnehmen.", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+                        }
+                    } catch (IngredientNotFoundException ex) {
                         new Thread(() -> JOptionPane.showMessageDialog(a, "Beim Löschen der Zutat ist ein Fehler aufgetreten!\n\nWeitere Informationen können Sie dem Log entnehmen.", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+                        Logger.logException(ex);
                     }
                 }
             } else {
@@ -159,6 +166,7 @@ public class ShowIngredients extends AppFrame {
     }
 
     private void createUIComponents() {
-        buildTable();
+        Runnable buildTable = this::buildTable;
+        buildTable.run();
     }
 }

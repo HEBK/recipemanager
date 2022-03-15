@@ -10,7 +10,6 @@ CREATE TABLE Recipe (
     `difficulty`        INT(1) NOT NULL DEFAULT 0,
     `description`       TEXT NULL DEFAULT NULL,
     `defaultQuantity`   INT(2) NOT NULL DEFAULT 4,
-    `taste`             INT NULL DEFAULT NULL,
     `category`          INT NOT NULL REFERENCES `RecipeCategory`(`categoryID`)
 );
 
@@ -31,6 +30,13 @@ CREATE TABLE RecipeIngredient (
     `relationID`        INTEGER PRIMARY KEY,
     `recipeID`          INTEGER NOT NULL REFERENCES `Recipe`(`recipeID`),
     `ingredientID`      INTEGER NOT NULL REFERENCES `Ingredient`(`ingredientID`),
-    `quantity`          FLOAT NOT NULL,
-    `unit`              VARCHAR(255) NOT NULL DEFAULT 'g'
+    `unitID`            INTEGER NOT NULL REFERENCES `IngredientUnits`(`unitID`),
+    `quantity`          FLOAT NOT NULL
+
+);
+
+CREATE TABLE IngredientUnits (
+    `unitID`            INTEGER PRIMARY KEY,
+    `unit`              VARCHAR(50) UNIQUE NOT NULL,
+    `name`              VARCHAR(50) UNIQUE NOT NULL
 );

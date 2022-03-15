@@ -33,7 +33,7 @@ public class AppProperties {
     /**
      * App version string
      */
-    public static final String VERSION = "0.0.1";
+    public static final String VERSION = "0.0.1-alpha";
 
     /**
      * Path to the main SQLite database

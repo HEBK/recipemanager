@@ -15,6 +15,7 @@ public class ShowRecipe extends AppFrame {
     private JButton convertButton;
     private JComboBox portionComboBox;
     private JTable ingredientsTable;
+    private JButton closeButton;
 
     public ShowRecipe(GUIController controller) {
         super(controller, buildFrameTitle("Rezept"), new Dimension(600, 400), true);
@@ -25,5 +26,9 @@ public class ShowRecipe extends AppFrame {
     protected void init() {
         add(root);
         setMinimumSize(new Dimension(750, 550));
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }

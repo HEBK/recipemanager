@@ -6,10 +6,7 @@ import de.hebkstudents.recipemanager.gui.frames.ingredient.AddIngredient;
 import de.hebkstudents.recipemanager.gui.frames.ingredient.IngredientFilterFrame;
 import de.hebkstudents.recipemanager.gui.frames.ingredient.ShowIngredients;
 import de.hebkstudents.recipemanager.gui.frames.other.DeveloperConsole;
-import de.hebkstudents.recipemanager.gui.frames.recipe.AddRecipe;
-import de.hebkstudents.recipemanager.gui.frames.recipe.AddRecipeIngredient;
-import de.hebkstudents.recipemanager.gui.frames.recipe.RecipeFilterFrame;
-import de.hebkstudents.recipemanager.gui.frames.recipe.ShowRecipes;
+import de.hebkstudents.recipemanager.gui.frames.recipe.*;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 import de.hebkstudents.recipemanager.ingredient.Ingredient;
 import de.hebkstudents.recipemanager.ingredient.IngredientFilter;
@@ -28,6 +25,7 @@ public class GUIController implements ActionListener {
 
     private AppFrame menu;
     private AppFrame showRecipes;
+    private ShowRecipe showRecipe;
     private AppFrame showIngredients;
     private AppFrame recipeFilterFrame;
     private AddRecipe addRecipe;
@@ -118,6 +116,7 @@ public class GUIController implements ActionListener {
         }
     }
 
+
     public void openFrameShowIngredients(IngredientFilter filter)
     {
         if (ingredientFilterFrame != null) {
@@ -137,6 +136,12 @@ public class GUIController implements ActionListener {
     {
         if (!focusFrame(addRecipe)){
             addRecipe = new AddRecipe(this);
+        }
+    }
+
+    public void openFrameShowRecipe(){
+        if (!focusFrame(showRecipe)){
+            showRecipe = new ShowRecipe(this);
         }
     }
 

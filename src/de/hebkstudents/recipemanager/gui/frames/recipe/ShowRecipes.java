@@ -50,6 +50,10 @@ public class ShowRecipes extends AppFrame {
             dispose();
             getController().openFrameAddRecipe();
         });
+        showRecipeButton.addActionListener(e -> {
+            dispose();
+            getController().openFrameShowRecipe();
+        });
 
         setCountLabel(recipesTable.getRowCount());
     }

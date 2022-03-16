@@ -109,7 +109,7 @@ public class DeveloperConsole extends AppFrame {
         String commandInput = commandTextfield.getText();
         String[] parsedCommand = commandInput.split(" ");
 
-        if (commandInput.isEmpty()) { commandTextfield.requestFocus(); return; }
+        if (commandInput.isEmpty() || commandInput.charAt(0) == ' ') { commandTextfield.requestFocus(); return; }
 
         executeButton.setEnabled(false);
         commandTextfield.setEnabled(false);

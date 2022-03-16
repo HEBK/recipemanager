@@ -38,7 +38,7 @@ public class AddRecipe extends AppFrame {
     private JLabel ingredientCountLabel;
     private DefaultTableModel ingredientsTableModel;
 
-    private ArrayList<Ingredient> temporaryIngredients = new ArrayList<>();
+    private final ArrayList<Ingredient> temporaryIngredients = new ArrayList<>();
 
     public AddRecipe(GUIController controller) {
         super(controller, buildFrameTitle("Rezept hinzufügen"), DEFAULT_DIMENSION, true);
@@ -109,7 +109,11 @@ public class AddRecipe extends AppFrame {
                 return;
             }
             if (descriptionTextArea.getText().isEmpty()) {
-                new Thread(() -> JOptionPane.showMessageDialog(null, "Bitte geben Sie eine Beschreibung für da Rezept ein!", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+                new Thread(() -> JOptionPane.showMessageDialog(null, "Bitte geben Sie eine Beschreibung für das Rezept ein!", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+                return;
+            }
+            if (temporaryIngredients.size() == 0) {
+                new Thread(() -> JOptionPane.showMessageDialog(null, "Bitte fügen Sie mindestens eine Zutat dem Rezept hinzu.", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
                 return;
             }
 

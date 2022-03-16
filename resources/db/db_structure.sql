@@ -28,7 +28,7 @@ CREATE TABLE Ingredient (
 
 CREATE TABLE RecipeIngredient (
     `relationID`        INTEGER PRIMARY KEY,
-    `recipeID`          INTEGER NOT NULL REFERENCES `Recipe`(`recipeID`),
+    `recipeID`          INTEGER NOT NULL REFERENCES `Recipe`(`recipeID`) ON DELETE CASCADE,
     `ingredientID`      INTEGER NOT NULL REFERENCES `Ingredient`(`ingredientID`),
     `unitID`            INTEGER NOT NULL REFERENCES `IngredientUnits`(`unitID`),
     `quantity`          FLOAT NOT NULL

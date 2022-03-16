@@ -66,8 +66,6 @@ public class ShowRecipes extends AppFrame {
             rows[i][4] = new ArrayList<>(Arrays.asList(recipes[i].getIngredients())).stream().allMatch(Ingredient::isVegetarian);
             rows[i][5] = new ArrayList<>(Arrays.asList(recipes[i].getIngredients())).stream().allMatch(Ingredient::isVegan);
             rows[i][6] = recipes[i].getTime() + " Minuten";
-
-            System.out.println(recipes[i].getIngredients().length);
         }
 
         return rows;

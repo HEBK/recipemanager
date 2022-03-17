@@ -88,13 +88,11 @@ public class RecipeController {
             PreparedStatement ps = DatabaseController.getConnection().prepareStatement("SELECT * FROM Recipe");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                recipes.add(new Recipe(rs.getInt(1), rs.getString(2), rs.getString(5), IngredientController.getIngredientsForRecipe(rs.getInt(1)), rs.getInt(6), rs.getInt(3), rs.getInt(4), RecipeCategoryController.getCategory(rs.getInt(1))));
+                recipes.add(new Recipe(rs.getInt(1), rs.getString(2), rs.getString(5), IngredientController.getIngredientsForRecipe(rs.getInt(1)), rs.getInt(6), rs.getInt(3), rs.getInt(4), RecipeCategoryController.getCategory(rs.getInt(7))));
             }
         } catch (SQLException e) {
             Logger.logException(e);
-        } catch (RecipeCategoryNotFoundException e) {
-            e.printStackTrace();
-        } catch (RecipeNotFoundException e) {
+        } catch (RecipeCategoryNotFoundException | RecipeNotFoundException e) {
             e.printStackTrace();
         }
         Recipe[] recipesArray = new Recipe[recipes.size()];

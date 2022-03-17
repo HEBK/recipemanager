@@ -10,6 +10,7 @@ import de.hebkstudents.recipemanager.gui.frames.recipe.*;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 import de.hebkstudents.recipemanager.ingredient.Ingredient;
 import de.hebkstudents.recipemanager.ingredient.IngredientFilter;
+import de.hebkstudents.recipemanager.recipe.Recipe;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 
@@ -139,9 +140,9 @@ public class GUIController implements ActionListener {
         }
     }
 
-    public void openFrameShowRecipe(){
+    public void openFrameShowRecipe(Recipe recipe){
         if (!focusFrame(showRecipe)){
-            showRecipe = new ShowRecipe(this);
+            showRecipe = new ShowRecipe(this, null);
         }
     }
 

@@ -35,6 +35,8 @@ public class Ingredient {
         this.category           = category;
     }
 
+
+
     public Ingredient(int ingredientID, int quantity, IngredientUnit unit) throws IngredientNotFoundException {
         if (!IngredientController.ingredientExists(ingredientID)) {
             Logger.log(LogType.ERROR, "Ingredient does not exist!");

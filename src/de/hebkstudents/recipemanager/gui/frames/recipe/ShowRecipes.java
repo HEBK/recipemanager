@@ -52,7 +52,7 @@ public class ShowRecipes extends AppFrame {
         });
         showRecipeButton.addActionListener(e -> {
             dispose();
-            getController().openFrameShowRecipe();
+//            getController().openFrameShowRecipe();
         });
 
         setCountLabel(recipesTable.getRowCount());

@@ -121,6 +121,8 @@ public class AddRecipe extends AppFrame {
             temporaryIngredients.toArray(ingredients);
             Recipe r = new Recipe(recipeNameTextfield.getText(), descriptionTextArea.getText(), ingredients, (int)defaultQuantities.getValue(), (int) timeSpinner.getValue(), difficultyComboBox.getSelectedIndex(), (RecipeCategory) recipeCategoryComboBox.getSelectedItem());
 
+            System.out.println(r.getCategory());
+
             try {
                 if (RecipeController.addRecipe(r)) {
                     new Thread(() -> JOptionPane.showMessageDialog(null, "Das Rezept wurde hinzugefügt!", buildFrameTitle("Rezept hinzugefügt"), JOptionPane.INFORMATION_MESSAGE)).start();

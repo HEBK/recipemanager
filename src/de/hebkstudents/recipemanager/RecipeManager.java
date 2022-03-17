@@ -3,6 +3,7 @@ package de.hebkstudents.recipemanager;
 import com.bulenkov.darcula.DarculaLaf;
 import de.hebkstudents.recipemanager.exception.RecipeNotFoundException;
 import de.hebkstudents.recipemanager.gui.GUIController;
+import de.hebkstudents.recipemanager.gui.frames.recipe.ShowRecipe;
 import de.hebkstudents.recipemanager.ingredient.IngredientController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import de.hebkstudents.recipemanager.storage.StorageBackend;

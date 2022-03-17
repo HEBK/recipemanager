@@ -15,19 +15,61 @@ import java.io.IOException;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
+/**
+ * ShowRecipes class
+ * Class for the frame that shows the main menu of this application
+ */
 public class Menu extends AppFrame {
+
+    /**
+     * Root panel that is being added to the frame
+     */
     private JPanel root;
+
+    /**
+     * Label that contains the appname
+     */
     private JLabel appnameLabel;
+
+    /**
+     * Button that opens the frame to add a recipe
+     */
     private JButton addRecipeButton;
+
+    /**
+     * Button that opens the frame with a list of all recipes
+     */
     private JButton showRecipesButton;
-    private JButton filterRecipesButton;
+
+    /**
+     * Button that opens the frame with a list of all ingredients
+     */
     private JButton ingredientsButton;
+
+    /**
+     * Button that exits the program
+     */
     private JButton closeButton;
+
+    /**
+     * Label that shows the current version number
+     */
     private JLabel versionLabel;
+
+    /**
+     * Button that opens the developer console
+     */
     private JButton developerConsoleButton;
+
+    /**
+     * Button that opens the folder which contains all custom application data
+     */
     private JButton dataFolderButton;
 
-
+    /**
+     * Menu constructor. Initializes the frame from its superclass.
+     * @param controller GUIController which is used to manage the frame.
+     */
     public Menu(GUIController controller)
     {
         super(controller, buildFrameTitle("Hauptmenü"), DEFAULT_DIMENSION, true);
@@ -45,8 +87,6 @@ public class Menu extends AppFrame {
                 RecipeManager.shutdownApp(0);
             }
         });
-
-
 
         setMinimumSize(new Dimension(750, 580));
         versionLabel.setText("v" + VERSION);
@@ -67,15 +107,11 @@ public class Menu extends AppFrame {
             }
         });
 
-
-
         showRecipesButton.setName("buttonMenuShowRecipes");
         showRecipesButton.addActionListener(controller);
         ingredientsButton.setName("buttonMenuShowIngredients");
         ingredientsButton.addActionListener(controller);
         addRecipeButton.setName("buttonMenuAddRecipe");
         addRecipeButton.addActionListener(controller);
-        filterRecipesButton.setName("buttonRecipeFilter");
-        filterRecipesButton.addActionListener(controller);
     }
 }

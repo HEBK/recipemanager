@@ -35,11 +35,20 @@ public class GUIController implements ActionListener {
     private AppFrame addIngredientFrame;
     private AppFrame addRecipeIngredientFrame;
 
+    /**
+     * GUIController constructor
+     * @param app App(RecipeManager) object
+     */
     public GUIController(RecipeManager app)
     {
         init(app, false);
     }
 
+    /**
+     * GUIController constructor
+     * @param app App(RecipeManager) object
+     * @param run Run the GUIController
+     */
     public GUIController(RecipeManager app, boolean run)
     {
         init(app, run);
@@ -58,6 +67,8 @@ public class GUIController implements ActionListener {
             }
             System.exit(-1);
         }
+
+        this.app = app;
 
         if (run) run();
     }
@@ -79,6 +90,12 @@ public class GUIController implements ActionListener {
             Logger.log(LogType.WARNING, "GUIController is already running!");
             return;
         }
+
+        if (app == null) {
+            Logger.log(LogType.ERROR, "Cannot run GUIController! App was not set!");
+            return;
+        }
+
         running = true;
         Logger.log(LogType.INFORMATION, "Running GUI Controller...");
         menu = new Menu(this);
@@ -103,6 +120,9 @@ public class GUIController implements ActionListener {
         return false;
     }
 
+    /**
+     * Opens the developer console if not already opened
+     */
     public void openDeveloperConsole()
     {
         if (!focusFrame(developerConsole)) {
@@ -110,14 +130,23 @@ public class GUIController implements ActionListener {
         }
     }
 
+    /**
+     * Opens the recipe list if not already opened
+     */
     public void openFrameShowRecipes()
     {
+        if (addRecipe != null) {
+            addRecipe.dispose();
+            addRecipe = null;
+        }
         if(!focusFrame(showRecipes)) {
             showRecipes = new ShowRecipes(this);
         }
     }
 
-
+    /**
+     * Opens the ingredients list if not already opened
+     */
     public void openFrameShowIngredients(IngredientFilter filter)
     {
         if (ingredientFilterFrame != null) {
@@ -133,6 +162,9 @@ public class GUIController implements ActionListener {
         }
     }
 
+    /**
+     * Opens the frame to add new recipes if not already opened
+     */
     public void openFrameAddRecipe()
     {
         if (!focusFrame(addRecipe)){
@@ -140,12 +172,19 @@ public class GUIController implements ActionListener {
         }
     }
 
+    /**
+     * Open sthe frame to show a recipe
+     * @param recipe Valid Recipe object
+     */
     public void openFrameShowRecipe(Recipe recipe){
         if (!focusFrame(showRecipe)){
-            showRecipe = new ShowRecipe(this, null);
+            showRecipe = new ShowRecipe(this, recipe);
         }
     }
 
+    /**
+     * Opens the recipe filter frame if not already opened
+     */
     public void openFrameRecipeFilter()
     {
         if (!focusFrame(recipeFilterFrame)) {
@@ -153,6 +192,9 @@ public class GUIController implements ActionListener {
         }
     }
 
+    /**
+     * Opens the ingredient filter if not already opened
+     */
     private void openFrameIngredientFilter()
     {
         if (showIngredients != null) {
@@ -164,6 +206,9 @@ public class GUIController implements ActionListener {
         }
     }
 
+    /**
+     * Opens the frame to add new ingredients if not already opened
+     */
     private void openFrameAddIngredient()
     {
         if (showIngredients != null) {
@@ -176,6 +221,9 @@ public class GUIController implements ActionListener {
 
     }
 
+    /**
+     * Opens the frame to add an ingredient to a recipe
+     */
     private void openFrameAddRecipeIngredient()
     {
         if (!focusFrame(addRecipeIngredientFrame)) {
@@ -183,6 +231,9 @@ public class GUIController implements ActionListener {
         }
     }
 
+    /**
+     * Closes the frame to add an ingredient to a recipe
+     */
     public void closeFrameAddRecipeIngredient()
     {
         if (addRecipeIngredientFrame != null) {
@@ -191,6 +242,11 @@ public class GUIController implements ActionListener {
         }
     }
 
+    /**
+     * Adds a ingredient object to the recipe that is being created (FRAME!)
+     * @param g Ingredient object
+     * @return true if successfully added
+     */
     public boolean addIngredientToRecipe(Ingredient g)
     {
         if (addRecipe != null) {

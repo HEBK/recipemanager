@@ -1,5 +1,8 @@
 package de.hebkstudents.recipemanager.exception;
 
+/**
+ * Exception is thrown if a category of an ingredient can not be found but is requested
+ */
 public class IngredientCategoryNotFoundException extends Exception {
 
     /**

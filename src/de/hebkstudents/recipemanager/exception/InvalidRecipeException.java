@@ -1,5 +1,8 @@
 package de.hebkstudents.recipemanager.exception;
 
+/**
+ * Exception is thrown if a recipe object has missing values that are needed to work properly or if the recipe obejct is null
+ */
 public class InvalidRecipeException extends Exception {
 
     /**

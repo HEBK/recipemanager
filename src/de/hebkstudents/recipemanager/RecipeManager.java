@@ -1,10 +1,12 @@
 package de.hebkstudents.recipemanager;
 
 import com.bulenkov.darcula.DarculaLaf;
-import de.hebkstudents.recipemanager.exception.RecipeNotFoundException;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frames.recipe.ShowRecipe;
-import de.hebkstudents.recipemanager.ingredient.IngredientController;
+import de.hebkstudents.recipemanager.ingredient.Ingredient;
+import de.hebkstudents.recipemanager.recipe.Recipe;
+import de.hebkstudents.recipemanager.recipe.RecipeCategory;
+import de.hebkstudents.recipemanager.recipe.RecipeController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import de.hebkstudents.recipemanager.storage.StorageBackend;
 import eu.cr4zyfl1x.logger.LogType;
@@ -16,7 +18,6 @@ import java.io.File;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Date;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;

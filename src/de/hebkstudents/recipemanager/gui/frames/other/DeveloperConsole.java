@@ -22,17 +22,57 @@ import java.util.concurrent.TimeUnit;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
+/**
+ * DeveloperConsole class
+ * Class for the frame that is used to take a look into the app log or to execute commands
+ */
 public class DeveloperConsole extends AppFrame {
+
+    /**
+     * Root panel that is being added to the frame
+     */
     private JPanel root;
+
+    /**
+     * TextPane that shows the console output
+     */
     private JTextPane consolePane;
+
+    /**
+     * Button that closes the console
+     */
     private JButton closeConsoleButton;
-    private JScrollPane consoleScrollPane;
+
+    /**
+     * Textfield to type in commands
+     */
     private JTextField commandTextfield;
+
+    /**
+     * Button to execute commands
+     */
     private JButton executeButton;
+
+    /**
+     * Button to open the directory for logfiles
+     */
     private JButton openLogfileDirButton;
+
+    /**
+     * Button to update the console output
+     */
     private JButton consoleLogUpdateButton;
+
+    /**
+     * Button to open the current logfile in editor
+     */
     private JButton openLogfileButton;
 
+
+    /**
+     * DeveloperConsole constructor. Initializes the frame from its superclass.
+     * @param controller GUIController which is used to manage the frame.
+     */
     public DeveloperConsole (GUIController controller)
     {
         super(controller, buildFrameTitle("Developer Console"), DEFAULT_DIMENSION, true);
@@ -80,6 +120,9 @@ public class DeveloperConsole extends AppFrame {
         commandTextfield.addActionListener(e -> runCommand());
     }
 
+    /**
+     * Initializes a new Interval that runs a thread to update the console output
+     */
     private void consoleLogUpdater()
     {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -87,6 +130,9 @@ public class DeveloperConsole extends AppFrame {
         executorService.scheduleAtFixedRate(consoleLogUpdate, 0, 10, TimeUnit.SECONDS);
     }
 
+    /**
+     * Updates the console output
+     */
     private void consoleLogUpdate()
     {
         try {
@@ -104,6 +150,9 @@ public class DeveloperConsole extends AppFrame {
         }
     }
 
+    /**
+     * Runs a command from the textfield
+     */
     private void runCommand()
     {
         String commandInput = commandTextfield.getText();

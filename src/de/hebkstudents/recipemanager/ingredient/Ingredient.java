@@ -7,16 +7,48 @@ import eu.cr4zyfl1x.logger.Logger;
 import java.util.Objects;
 
 public class Ingredient {
-    //Attribute
+
+    /**
+     * ID of the ingredient
+     */
     private Integer ingredientID;
+
+    /**
+     * Name of the ingredient
+     */
     private String name;
+
+    /**
+     * Boolean if the ingredient is vegan
+     */
     private boolean isVegan;
+    /**
+     * Boolean if the ingredient is vegetarian
+     */
     private boolean isVegetarian;
+
+    /**
+     * Quantity of the ingredient
+     */
     private Integer quantity;
+
+    /**
+     * Category of the ingredient
+     */
     private IngredientCategory category;
+
+    /**
+     * Unit of the ingredient
+     */
     private IngredientUnit unit;
 
-    // Konstruktor
+    /**
+     * Ingredient cunstructor.
+     * @param name Ingredient name
+     * @param isVegan Is the ingredient vegan
+     * @param isVegetarian Is the ingredient vegetarian
+     * @param category Category object for the ingredient
+     */
     public Ingredient(String name, boolean isVegan, boolean isVegetarian, IngredientCategory category)
     {
 
@@ -26,6 +58,14 @@ public class Ingredient {
         this.category           = category;
     }
 
+    /**
+     * Ingredient constructor.
+     * @param ingredientID ID of the ingredient
+     * @param name Ingredient name
+     * @param isVegan Is the ingredient vegan
+     * @param isVegetarian Is the ingredient vegetarian
+     * @param category Category object for the ingredient
+     */
     public Ingredient(int ingredientID, String name, boolean isVegan, boolean isVegetarian, IngredientCategory category)
     {
         this.ingredientID       = ingredientID;
@@ -35,8 +75,13 @@ public class Ingredient {
         this.category           = category;
     }
 
-
-
+    /**
+     * Constructs an ingredient from its ID in the database
+     * @param ingredientID IngredientID
+     * @param quantity Quantity for the ingredient
+     * @param unit Unit for the ingredient
+     * @throws IngredientNotFoundException If an ingredient is requested that does not exist!
+     */
     public Ingredient(int ingredientID, int quantity, IngredientUnit unit) throws IngredientNotFoundException {
         if (!IngredientController.ingredientExists(ingredientID)) {
             Logger.log(LogType.ERROR, "Ingredient does not exist!");
@@ -54,37 +99,50 @@ public class Ingredient {
         this.unit               = unit;
     }
 
-    //Methoden
-    private boolean save() {
-        return false;
-    }
-
-    //get-/setter
+    /**
+     * Gets the ID of the ingredient
+     * @return ID
+     */
     public Integer getIngredientID() {
         return ingredientID;
     }
 
+    /**
+     * @return Name of the ingredient
+     */
     @Override
     public String toString() {
         return getName();
     }
 
+    /**
+     * Gets the category object
+     * @return IngredientCategory Object
+     */
     public IngredientCategory getIngredientCategory() {
         return category;
     }
 
+    /**
+     * Sets the category object
+     * @param category IngredientCategory Object
+     */
     public void setIngredientCategory(IngredientCategory category) {
         this.category = category;
     }
 
+    /**
+     * Gets the unit for the ingredient
+     * @return unit object
+     */
     public IngredientUnit getUnit() {
         return unit;
     }
 
-    public void setUnit(IngredientUnit unit) {
-        this.unit = unit;
-    }
-
+    /**
+     * Gets the ingredient name
+     * @return ingredeint name
+     */
     public String getName() {
         return name;
     }
@@ -103,14 +161,6 @@ public class Ingredient {
 
     public boolean isVegan() {
         return isVegan;
-    }
-
-    public void setVegan(boolean vegan) {
-        isVegan = vegan;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     public Integer getQuantity() {

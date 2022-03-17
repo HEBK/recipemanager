@@ -34,7 +34,7 @@ public class IngredientFilter implements SimpleFilter {
     public String getSQLOptions()
     {
         if (sqlOptions != null) return sqlOptions;
-        if (query == null && isVegetarian == null && isVegan == null && category == null) return null;
+        if (query == null && isVegetarian == null && isVegan == null && category == null && ingredientID == null) return null;
 
         String categoryVal = (category != null) ? String.valueOf(category.getCategoryID()) : "";
 

@@ -108,7 +108,24 @@ public class RecipeController {
         return false;
     }
 
-    public static Recipe getRecipe (int recipeID) {
+    public static Recipe getRecipe (int recipeID) throws RecipeNotFoundException {
+        if (!recipeExists(recipeID)) {
+            throw new RecipeNotFoundException("The recipe with ID '" + recipeID + "' could not be found!");
+        }
+
+        try {
+            PreparedStatement ps = DatabaseController.getConnection().prepareStatement("SELECT * FROM Recipe WHERE recipeID = ?");
+            ps.setInt(1, recipeID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Recipe(rs.getInt(1), rs.getString(2), rs.getString(5), IngredientController.getIngredientsForRecipe(rs.getInt(1)), rs.getInt(6), rs.getInt(3), rs.getInt(4), RecipeCategoryController.getCategory(rs.getInt(7)));
+            }
+        } catch (SQLException e) {
+            Logger.logException(e);
+        } catch (RecipeCategoryNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

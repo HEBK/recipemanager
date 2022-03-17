@@ -1,5 +1,8 @@
 package de.hebkstudents.recipemanager.exception;
 
+/**
+ * Exception is thrown if a recipe can not be found but is requested
+ */
 public class RecipeNotFoundException extends Exception {
 
     /**

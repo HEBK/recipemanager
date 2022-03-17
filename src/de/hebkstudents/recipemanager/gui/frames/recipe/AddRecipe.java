@@ -17,29 +17,94 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.DEFAULT_DIMENSION;
 
+/**
+ * AddRecipe class
+ * Class for the frame that is used to add a new recipe
+ */
 public class AddRecipe extends AppFrame {
+
+    /**
+     * Root panel that is being added to the frame
+     */
     private JPanel root;
+
+    /**
+     * TextField for the name of the recipe
+     */
     private JTextField recipeNameTextfield;
+
+    /**
+     * TextArea to type in the recipe description
+     */
     private JTextArea descriptionTextArea;
+
+    /**
+     * ComboBox to select the recipe difficulty
+     */
     private JComboBox<String> difficultyComboBox;
+
+    /**
+     * Spinner to define the needed time for this recipe
+     */
     private JSpinner timeSpinner;
+
+    /**
+     * Button to add the recipe to the DB
+     */
     private JButton addRecipeButton;
+
+    /**
+     * Button to add a new ingredient to the recipe
+     */
     private JButton addIngredientButton;
+
+    /**
+     * Button to remove an ingredient from the recipe
+     */
     private JButton removeIngredientButton;
+
+    /**
+     * Button to close this window
+     */
     private JButton closeButton;
+
+    /**
+     * ComboBox to select the recipe category
+     */
     private JComboBox<RecipeCategory> recipeCategoryComboBox;
 
+    /**
+     * Table to display the current added ingredients
+     */
     private JTable ingredientsTable;
+
+    /**
+     * Spinner to define the default portion count
+     */
     private JSpinner defaultQuantities;
+
+    /**
+     * Label which shows the current count of ingredients
+     */
     private JLabel ingredientCountLabel;
+
+    /**
+     * Model for the ingredient table that defines the columns etc.
+     */
     private DefaultTableModel ingredientsTableModel;
 
+    /**
+     * ArrayList that is used to temporary save the added ingredients
+     */
     private final ArrayList<Ingredient> temporaryIngredients = new ArrayList<>();
 
+    /**
+     * AddRecipe constructor. Initializes the frame from its superclass.
+     * @param controller GUIController which is used to manage the frame.
+     */
     public AddRecipe(GUIController controller) {
         super(controller, buildFrameTitle("Rezept hinzufügen"), DEFAULT_DIMENSION, true);
         init();
@@ -53,6 +118,10 @@ public class AddRecipe extends AppFrame {
         initializeComponents();
     }
 
+    /**
+     * Initializes the components in this frame
+     * (e.g. setting default values & ranges)
+     */
     private void initializeComponents()
     {
         this.addWindowListener(new WindowAdapter() {
@@ -135,6 +204,9 @@ public class AddRecipe extends AppFrame {
         });
     }
 
+    /**
+     * Builds/Initializes the table for the ingredients
+     */
     private void buildIngredientsTable()
     {
         String[]    headRow = {"Zutat", "Menge"};
@@ -164,6 +236,11 @@ public class AddRecipe extends AppFrame {
         ingredientsTable.getColumnModel().getColumn(1).setPreferredWidth((int) (width*0.05));
     }
 
+    /**
+     * Adds a new ingredient to the recipe and the ingredient table
+     * @param i Ingredient object
+     * @return true if successfully added
+     */
     public boolean addIngredient(Ingredient i)
     {
         if (i == null || i.getUnit() == null || i.getQuantity() == null) {
@@ -184,11 +261,17 @@ public class AddRecipe extends AppFrame {
         return true;
     }
 
+    /**
+     * Sets the current count of ingredients
+     */
     private void setIngredientCountLabel(int ingredientCount)
     {
         ingredientCountLabel.setText(ingredientCount + " Zutat" + ((ingredientCount != 1) ? "en" : ""));
     }
 
+    /**
+     * IntelliJ Idea custom component creation method
+     */
     private void createUIComponents() {
         buildIngredientsTable();
         recipeCategoryComboBox = new JComboBox<>(RecipeCategoryController.getAllCategories());

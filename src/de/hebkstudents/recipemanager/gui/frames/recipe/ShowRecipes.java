@@ -4,33 +4,78 @@ import de.hebkstudents.recipemanager.exception.RecipeNotFoundException;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 import de.hebkstudents.recipemanager.ingredient.Ingredient;
-import de.hebkstudents.recipemanager.ingredient.IngredientController;
-import de.hebkstudents.recipemanager.ingredient.IngredientFilter;
 import de.hebkstudents.recipemanager.recipe.Recipe;
 import de.hebkstudents.recipemanager.recipe.RecipeController;
+import eu.cr4zyfl1x.logger.Logger;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.DEFAULT_DIMENSION;
 
+/**
+ * ShowRecipes class
+ * Class for the frame that is used to list all or filtered recipes
+ */
 public class ShowRecipes extends AppFrame {
+
+    /**
+     * Root panel that is being added to the frame
+     */
     private JPanel root;
+
+    /**
+     * Button that opens the filter frame
+     */
     private JButton filterButton;
+
+    /**
+     * Button open the frame to add a new recipe to the DB
+     */
     private JButton addRecipeButton;
+
+    /**
+     * Button to delete the selected recipe
+     */
     private JButton deleteRecipeButton;
+
+    /**
+     * Button to modify the selected recipe
+     */
     private JButton modifyRecipeButton;
+
+    /**
+     * Button to show the selected recipe in a new frame
+     */
     private JButton showRecipeButton;
+
+    /**
+     * Button to close this window
+     */
     private JButton closeButton;
+
+    /**
+     * Label to show the count of the current recipes in the table
+     */
     private JLabel countLabel;
 
+    /**
+     * Table to list all or the filtered recipes
+     */
     private JTable recipesTable;
+
+    /**
+     * TableModel for the table that contains the recipes
+     */
     private DefaultTableModel recipesTableModel;
 
+    /**
+     * ShowRecipes constructor. Initializes the frame from its superclass.
+     * @param controller GUIController which is used to manage the frame.
+     */
     public ShowRecipes(GUIController controller) {
         super(controller, buildFrameTitle("Rezepte anzeigen"), DEFAULT_DIMENSION, true);
         init();
@@ -43,6 +88,10 @@ public class ShowRecipes extends AppFrame {
         initializeComponents();
     }
 
+    /**
+     * Initializes the components in this frame
+     * (e.g. setting default values & ranges)
+     */
     private void initializeComponents()
     {
         closeButton.addActionListener(e -> dispose());
@@ -50,14 +99,34 @@ public class ShowRecipes extends AppFrame {
             dispose();
             getController().openFrameAddRecipe();
         });
+
         showRecipeButton.addActionListener(e -> {
-            dispose();
-//            getController().openFrameShowRecipe();
+            if (!recipesTable.getSelectionModel().isSelectionEmpty()) {
+                int selectedRow = recipesTable.getSelectedRow();
+
+                try {
+                    int recipeID = Integer.parseInt(recipesTable.getValueAt(selectedRow, 0).toString());
+                    Recipe recipe = RecipeController.getRecipe(recipeID);
+
+                    dispose();
+                    getController().openFrameShowRecipe(recipe);
+
+                } catch (NumberFormatException | RecipeNotFoundException ex) {
+                    new Thread(() -> JOptionPane.showMessageDialog(this, "Es ist ein Fehler aufgetreten!\n\nWeitere Informationen im Log", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+                    Logger.logException(ex);
+                }
+            } else {
+                new Thread(() -> JOptionPane.showMessageDialog(this, "Bitte wählen Sie ein Rezept aus, um es anzuzeigen!", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+            }
         });
 
         setCountLabel(recipesTable.getRowCount());
     }
 
+    /**
+     * Gets the recipes as two-dimensional-array to make them compatible for the table
+     * @return two-dimensional-array with the recipe objects
+     */
     private Object[][] getTableData() {
         Recipe[] recipes = RecipeController.getRecipes();
         Object[][] rows = new Object[recipes.length][7];
@@ -76,7 +145,10 @@ public class ShowRecipes extends AppFrame {
     }
 
 
-    private void setTable (){
+    /**
+     * Builds/Initializes the table for the recipes
+     */
+    private void buildTable(){
         String[] headrow = {"ID", "Name", "Kategorie", "Schwierigkeit", "Vegetarisch", "Vegan", "Zeit"};
 
         Object[][] rows = getTableData();
@@ -126,12 +198,19 @@ public class ShowRecipes extends AppFrame {
     }
 
 
+    /**
+     * Sets the defined count in the label
+     * @param count Recipe count as integer
+     */
     private void setCountLabel(int count)
     {
         countLabel.setText("Es wurde" + ((count != 1) ? "n" : "") + " " + count +" Rezept" + ((count != 1) ? "e" : "") + " gefunden!");
     }
 
+    /**
+     * IntelliJ Idea custom component creation method
+     */
     private void createUIComponents() {
-        setTable();
+        buildTable();
     }
 }

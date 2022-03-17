@@ -10,16 +10,51 @@ import java.awt.*;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.DEFAULT_DIMENSION;
 
+/**
+ * Add ingredient class
+ * Class for the frame that is used to add new ingredients
+ */
 public class AddIngredient extends AppFrame {
+
+    /**
+     * Root panel that is being added to the frame
+     */
     private JPanel root;
-    private JLabel appnameLabel;
+
+    /**
+     * JTextField that is used to type in the name of the ingredient
+     */
     private JTextField nameTextField;
+
+    /**
+     * JComboBox which is used to select the category of the ingredient
+     */
     private JComboBox<IngredientCategory> categoryComboBox;
+
+    /**
+     * JCheckBox which is used to define if the ingredient is vegetarian
+     */
     private JCheckBox vegetarianCheckBox;
+
+    /**
+     * JCheckBox which is used to define if the ingredient is vegan
+     */
     private JCheckBox veganCheckBox;
+
+    /**
+     * JButton which is clicked to add the ingredient with its values to the DB
+     */
     private JButton addIngredientButton;
+
+    /**
+     * JButton to go back to the ingredients list
+     */
     private JButton backButton;
 
+    /**
+     * AddIngredient constructor. Initializes the frame from its superclass.
+     * @param controller GUIController which is used to manage the frame.
+     */
     public AddIngredient(GUIController controller){
         super(controller, buildFrameTitle("Zutat hinzufügen"), DEFAULT_DIMENSION, true);
         init();
@@ -33,11 +68,17 @@ public class AddIngredient extends AppFrame {
         initComponents();
     }
 
+    /**
+     * Sets the items for the ingredient category combobox (From DB)
+     */
     private void initCategoryComboBox()
     {
         categoryComboBox = new JComboBox<>(IngredientCategoryController.getIngredientCategories());
     }
 
+    /**
+     * Checks if all inputs are filled correctly and requests the addition to the database using the IngredientController
+     */
     private void addIngredient()
     {
         Component g = this;
@@ -60,6 +101,10 @@ public class AddIngredient extends AppFrame {
     }
 
 
+    /**
+     * Initializes the components in this frame
+     * (e.g. setting default values & ranges)
+     */
     private void initComponents()
     {
         vegetarianCheckBox.setSelected(true);
@@ -75,6 +120,9 @@ public class AddIngredient extends AppFrame {
         backButton.addActionListener(e -> getController().openFrameShowIngredients(null));
     }
 
+    /**
+     * IntelliJ Idea custom component creation method
+     */
     private void createUIComponents() {
         initCategoryComboBox();
     }

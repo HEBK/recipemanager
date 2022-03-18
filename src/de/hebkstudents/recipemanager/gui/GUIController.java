@@ -170,6 +170,7 @@ public class GUIController implements ActionListener {
         if (!focusFrame(addRecipe)){
             addRecipe = new AddRecipe(this);
         }
+
     }
 
     /**

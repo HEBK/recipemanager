@@ -100,11 +100,19 @@ public class RecipeController {
         return recipesArray;
     }
 
-    public static boolean deleteRecipe (Recipe recipe) {
+    public static boolean deleteRecipe (Recipe recipe) throws  InvalidRecipeException {
+        if (recipe == null) {
+            throw new InvalidRecipeException("The recipe object is broken an can therefore not get added!");
+        }
+        while(DatabaseController.getConnection().prepareStatement("SELECT ingredients FROM RecipeIngredience ") != null){
+
+        }
+
         return false;
     }
 
     public static boolean deleteRecipe (int recipeID) {
+
         return false;
     }
 

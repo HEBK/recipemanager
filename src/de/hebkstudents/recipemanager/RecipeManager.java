@@ -1,19 +1,31 @@
 package de.hebkstudents.recipemanager;
 
-import com.bulenkov.darcula.DarculaLaf;
+import com.bulenkov.darcula.DarculaLookAndFeelInfo;
+import de.hebkstudents.recipemanager.exception.IngredientNotFoundException;
+import de.hebkstudents.recipemanager.exception.InvalidMethodParameterException;
 import de.hebkstudents.recipemanager.gui.GUIController;
+import de.hebkstudents.recipemanager.gui.frames.ingredient.EditIngredient;
+import de.hebkstudents.recipemanager.ingredient.IngredientController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
+import de.hebkstudents.recipemanager.storage.DefaultConfig;
 import de.hebkstudents.recipemanager.storage.StorageBackend;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 import eu.cr4zyfl1x.logger.exception.InvalidLoggerException;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Scanner;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
@@ -32,8 +44,11 @@ public class RecipeManager {
         // Initialize logger
         initLogger();
 
+        // Initialize configurations
+        initializeConfiguration();
+
         // Load LookAndFeel
-        loadLookAndFeel(new DarculaLaf());
+        loadLookAndFeel(DEFAULT_CONFIG.read("designClass") == null ? "com.bulenkov.darcula.DarculaLaf" : DEFAULT_CONFIG.read("designClass"));
 
         // Register SQL Drivers
         registerDrivers(new Driver[]{
@@ -47,14 +62,15 @@ public class RecipeManager {
         // Initialize database connection
         initializeDatabase();
 
+        // Check for updates
+        checkForUpdates();
+
         // Create & run GUI instance
         manager.setController(new GUIController(manager));
         manager.getController().run();
 
         // Log end of main
         Logger.log(LogType.SYSTEM, "App " + APPNAME + " successfully loaded!");
-
-        if ("Mehl".matches(".*"+"hl"+".*")) System.out.println("yas");
     }
 
     /**
@@ -72,6 +88,65 @@ public class RecipeManager {
                 Logger.log(LogType.INFORMATION, "-> " + dir);
             }
             STORAGE_BACKEND.createDirectories();
+        }
+    }
+
+    /**
+     * Initializes the configuration files
+     */
+    private static void initializeConfiguration() {
+        try {
+            DEFAULT_CONFIG = new DefaultConfig(new File(STORAGE_PATH + "/config/general.properties"), "General configuration file for App " + APPNAME);
+
+            if (!DEFAULT_CONFIG.exists()) {
+                if (DEFAULT_CONFIG.createConfigFile()) {
+                    boolean updateCheck = JOptionPane.showConfirmDialog(null, "Do you want to check for newer versions of " + APPNAME + " at startup?", APPNAME + " | " + "Update Checker", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+                    DEFAULT_CONFIG.write("checkForUpdates", String.valueOf(updateCheck));
+                    DEFAULT_CONFIG.write("designClass", "com.bulenkov.darcula.DarculaLaf");
+                    return;
+                }
+            } else {
+                return;
+            }
+        } catch (InvalidMethodParameterException e) {
+            Logger.log(LogType.CRITICAL, "Unable to initialize general configuration. Quitting ...");
+            Logger.logException(e);
+        }
+        JOptionPane.showMessageDialog(null, "A critical error occurred!\nMore information in the logfile.");
+        shutdownApp(500);
+    }
+
+    /**
+     * Checks in a new Thread for updates to not influence the performance
+     */
+    private static void checkForUpdates()
+    {
+        if (Boolean.parseBoolean(DEFAULT_CONFIG.read("checkForUpdates"))) {
+            new Thread(() -> {
+                try {
+                    URL url = new URL("https://cdn.kleine-vorholt.eu/software/hebk/recipemanager/dl/version.php?type=raw");
+                    Scanner scanner = new Scanner(url.openStream());
+                    String version = scanner.nextLine();
+                    if (version.isEmpty() || version.equals(" ") || version.equals("\n")) version = "n/A";
+
+                    if (!version.equals(VERSION)) {
+                        Logger.log(LogType.INFORMATION, "Update checker: Version " + version + " is now available!");
+                        if (JOptionPane.showConfirmDialog(null, "Version "+ version + " von " + APPNAME + " ist nun verfügbar!\n\nMöchten Sie diese jetzt herunterladen?\n\nIhre Version: " + VERSION, APPNAME + " | Update verfügbar!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                            Desktop.getDesktop().browse(new URI("https://github.com/HEBK/recipemanager/releases/latest"));
+                            RecipeManager.shutdownApp(1);
+                        }
+                    } else {
+                        Logger.log(LogType.INFORMATION, "You're running the latest version of " + APPNAME + "!");
+                    }
+                } catch (IOException e) {
+                    Logger.log(LogType.ERROR, "Cannot check for updates!");
+                    Logger.logException(e);
+                } catch (URISyntaxException e) {
+                    Logger.log(LogType.ERROR, "Cannot open webpage to download update!");
+                    Logger.logException(e);
+                    JOptionPane.showMessageDialog(null, "Fehler beim Aufrufen der Downloadseite!\n\nFür mehr Informationen bitte den Log einsehen!", APPNAME + " | Fehler", JOptionPane.ERROR_MESSAGE);
+                }
+            }).start();
         }
     }
 
@@ -100,16 +175,17 @@ public class RecipeManager {
 
     /**
      * Load LookAndFeel
-     * @param l LookAndFeel Object
+     * @param lookAndFeelClass LookAndFeel ClassName
      */
-    private static void loadLookAndFeel(LookAndFeel l) {
+    public static void loadLookAndFeel(String lookAndFeelClass) {
         try {
-            UIManager.setLookAndFeel(l);
-            Logger.log(LogType.SYSTEM, "LookAndFeel " + l.getName() + " loaded successfully!");
-        } catch (UnsupportedLookAndFeelException e) {
+            UIManager.setLookAndFeel(lookAndFeelClass);
+            Logger.log(LogType.SYSTEM, "LookAndFeel " + UIManager.getLookAndFeel().getName() + " loaded successfully!");
+        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             Logger.log(LogType.CRITICAL, "Unable to load LookAndFeel!");
-            JOptionPane.showMessageDialog(null, "We're unable to load the LookAndFeel for this Application.", "Critical application error!", JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
+            Logger.logException(e);
+            JOptionPane.showMessageDialog(null, "We're unable to load the LookAndFeel for this Application.\n\nPlease review log file for more information!", "Critical application error!", JOptionPane.ERROR_MESSAGE);
+            System.exit(500);
         }
     }
 

@@ -1,7 +1,11 @@
 package de.hebkstudents.recipemanager.storage;
 
+import de.hebkstudents.recipemanager.design.LaF;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class AppProperties {
 
@@ -33,7 +37,7 @@ public class AppProperties {
     /**
      * App version string
      */
-    public static final String VERSION = "0.0.1-alpha";
+    public static final String VERSION = "0.1.0";
 
     /**
      * Path to the main SQLite database
@@ -50,7 +54,20 @@ public class AppProperties {
      */
     public static final String DB_DATA_TEMPLATE = "resources/db/db_data.sql";
 
+    /**
+     * Bidirectional HashMap with all compatible LookAndFeels --> LIB: Apache Commons Collections
+     */
+    public static final ArrayList<LaF> LOOK_AND_FEEL_TPS = new ArrayList<>(Arrays.asList(
+            new LaF("com.bulenkov.darcula.DarculaLaf", "Darcula"),
+            new LaF("javax.swing.plaf.nimbus.NimbusLookAndFeel", "Nimbus"),
+            new LaF("javax.swing.plaf.metal.MetalLookAndFeel", "Metal"),
+            new LaF("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel", "Windows Classic"),
+            new LaF(UIManager.getSystemLookAndFeelClassName(), "System default")
+    ));
+
     public static boolean DB_STRUCTURE_INITIALIZED;
+
+    public static DefaultConfig DEFAULT_CONFIG;
 
     /**
      * Defines whether the StorageBackend and SQL is initialized or not

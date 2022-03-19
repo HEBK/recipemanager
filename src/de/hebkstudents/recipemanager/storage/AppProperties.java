@@ -37,7 +37,23 @@ public class AppProperties {
     /**
      * App version string
      */
-    public static final String VERSION = "0.1.0";
+    public static final String VERSION = "0.1.0-beta";
+
+    /**
+     * Latest Version String
+     * Server URL
+     */
+    public static final String VERSION_STRING_SERVER_URL = "https://cdn.kleine-vorholt.eu/software/hebk/recipemanager/dl/version.php?type=raw";
+
+    /**
+     * Server-URL to the latest installer
+     */
+    public static final String LATEST_VERSION_INSTALLER_URL = "https://cdn.sarpex.eu/software/hebk/recipemanager/dl/download.php?type=exe";
+
+    /**
+     * GitHub Repo URL
+     */
+    public static final String GITHUB_REPO_URL = "https://github.com/HEBK/recipemanager";
 
     /**
      * Path to the main SQLite database
@@ -60,7 +76,6 @@ public class AppProperties {
     public static final ArrayList<LaF> LOOK_AND_FEEL_TPS = new ArrayList<>(Arrays.asList(
             new LaF("com.bulenkov.darcula.DarculaLaf", "Darcula"),
             new LaF("javax.swing.plaf.nimbus.NimbusLookAndFeel", "Nimbus"),
-            new LaF("javax.swing.plaf.metal.MetalLookAndFeel", "Metal"),
             new LaF("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel", "Windows Classic"),
             new LaF(UIManager.getSystemLookAndFeelClassName(), "System default")
     ));

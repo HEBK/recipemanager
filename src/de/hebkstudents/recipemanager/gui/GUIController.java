@@ -3,9 +3,12 @@ package de.hebkstudents.recipemanager.gui;
 import de.hebkstudents.recipemanager.RecipeManager;
 import de.hebkstudents.recipemanager.gui.frames.Menu;
 import de.hebkstudents.recipemanager.gui.frames.ingredient.AddIngredient;
+import de.hebkstudents.recipemanager.gui.frames.ingredient.EditIngredient;
 import de.hebkstudents.recipemanager.gui.frames.ingredient.IngredientFilterFrame;
 import de.hebkstudents.recipemanager.gui.frames.ingredient.ShowIngredients;
+import de.hebkstudents.recipemanager.gui.frames.other.About;
 import de.hebkstudents.recipemanager.gui.frames.other.DeveloperConsole;
+import de.hebkstudents.recipemanager.gui.frames.other.Options;
 import de.hebkstudents.recipemanager.gui.frames.recipe.*;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 import de.hebkstudents.recipemanager.ingredient.Ingredient;
@@ -34,6 +37,9 @@ public class GUIController implements ActionListener {
     private AppFrame ingredientFilterFrame;
     private AppFrame addIngredientFrame;
     private AppFrame addRecipeIngredientFrame;
+    private AppFrame options;
+    private AppFrame editIngredient;
+    private AppFrame aboutFrame;
 
     /**
      * GUIController constructor
@@ -101,6 +107,31 @@ public class GUIController implements ActionListener {
         menu = new Menu(this);
     }
 
+    public void stop(boolean restart)
+    {
+        Logger.log(LogType.SYSTEM, "Shutting down GUI Controller ...");
+
+        if (menu != null) { menu.dispose(); }
+        if (showRecipes != null) { showRecipes.dispose(); }
+        if (showRecipe != null) { showRecipe.dispose(); }
+        if (showIngredients != null) { showIngredients.dispose(); }
+        if (recipeFilterFrame != null) { recipeFilterFrame.dispose(); }
+        if (addRecipe != null) { addRecipe.dispose(); }
+        if (developerConsole != null) { developerConsole.dispose(); }
+        if (ingredientFilterFrame != null) { ingredientFilterFrame.dispose(); }
+        if (addIngredientFrame != null) { addIngredientFrame.dispose(); }
+        if (addRecipeIngredientFrame != null) { addRecipeIngredientFrame.dispose(); }
+        if (options != null) { options.dispose(); }
+        if (editIngredient != null) { editIngredient.dispose(); }
+        if (aboutFrame != null) { aboutFrame.dispose(); }
+
+        running = false;
+
+        if (restart) {
+            run();
+        }
+    }
+
     /**
      * Tries to focus a frame by its object
      * @param frame Object of the frame that should be focussed
@@ -152,6 +183,10 @@ public class GUIController implements ActionListener {
         if (ingredientFilterFrame != null) {
             ingredientFilterFrame.dispose();
             ingredientFilterFrame = null;
+        }
+        if (editIngredient != null) {
+            editIngredient.dispose();
+            editIngredient = null;
         }
         if (addIngredientFrame != null) {
             addIngredientFrame.dispose();
@@ -219,7 +254,6 @@ public class GUIController implements ActionListener {
         if (!focusFrame(addIngredientFrame)) {
             addIngredientFrame = new AddIngredient(this);
         }
-
     }
 
     /**
@@ -243,6 +277,13 @@ public class GUIController implements ActionListener {
         }
     }
 
+    private void openFrameOptions()
+    {
+        if (!focusFrame(options)) {
+            options = new Options(this);
+        }
+    }
+
     /**
      * Adds a ingredient object to the recipe that is being created (FRAME!)
      * @param g Ingredient object
@@ -262,6 +303,24 @@ public class GUIController implements ActionListener {
         return false;
     }
 
+    public void openFrameEditIngredient(Ingredient ingredient)
+    {
+        if (showIngredients != null) {
+            showIngredients.dispose();
+            showIngredients = null;
+        }
+        if (!focusFrame(editIngredient)) {
+            editIngredient = new EditIngredient(this, ingredient);
+        }
+    }
+
+    public void openFrameAbout()
+    {
+        if (!focusFrame(aboutFrame)) {
+            aboutFrame = new About(this);
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String componentID = ((Component) e.getSource()).getName();
@@ -273,6 +332,8 @@ public class GUIController implements ActionListener {
             case "buttonIngredientFilter" -> openFrameIngredientFilter();
             case "buttonIngredientsAddIngredient" -> openFrameAddIngredient();
             case "buttonAddRecipeAddRecipeIngredient" -> openFrameAddRecipeIngredient();
+            case "buttonMenuOptions" -> openFrameOptions();
+            case "buttonMenuAbout" -> openFrameAbout();
             default -> JOptionPane.showMessageDialog(null, "Action not found!\n\nAction: " + componentID, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

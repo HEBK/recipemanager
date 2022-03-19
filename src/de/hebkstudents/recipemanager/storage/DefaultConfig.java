@@ -5,6 +5,8 @@ import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Properties;
 
 public class DefaultConfig {
@@ -130,5 +132,23 @@ public class DefaultConfig {
      */
     public String getDescription() {
         return description;
+    }
+
+
+    public String[] getExistingProperties()
+    {
+        try {
+            properties.load(new FileReader(configFile));
+            String[] propertyArray = new String[properties.keySet().size()];
+            Object[] pps = properties.keySet().toArray(new Object[0]);
+
+            for (int i = 0; i < propertyArray.length; i++) {
+                propertyArray[i] = pps[i].toString();
+            }
+            return propertyArray;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new String[0];
     }
 }

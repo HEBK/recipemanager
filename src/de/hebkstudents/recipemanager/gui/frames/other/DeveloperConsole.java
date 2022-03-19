@@ -5,6 +5,7 @@ import de.hebkstudents.recipemanager.exception.IngredientNotFoundException;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 import de.hebkstudents.recipemanager.ingredient.IngredientController;
+import de.hebkstudents.recipemanager.utils.UpdateChecker;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 
@@ -170,6 +171,14 @@ public class DeveloperConsole extends AppFrame {
 
             switch (parsedCommand[0].toLowerCase()) {
                 case "help":
+                    Logger.log(LogType.INFORMATION, "The following commands exist:\n" +
+                            "- version      -> Shows the current installed app version\n" +
+                            "- exit         -> Shuts down the app after confirmation\n" +
+                            "- ingredient   -> Manages ingredients\n" +
+                            "- config       -> Maneges the app configuration\n" +
+                            "- close        -> Closes this window\n" +
+                            "- restart      -> Restarts the apps GUI\n" +
+                            "- update       -> Executes an app update");
                     break;
                 case "version":
                     Logger.log(LogType.INFORMATION, "You're running " + APPNAME + " v" + VERSION);
@@ -194,9 +203,61 @@ public class DeveloperConsole extends AppFrame {
                     }
                     Logger.log(LogType.INFORMATION, "Command syntax: ingredient <add|delete|modify> <ID>");
                     break;
+                case "config":
+                    if (parsedCommand.length == 2) {
+                        if (parsedCommand[1].equalsIgnoreCase("list")){
+                            Logger.log(LogType.INFORMATION, "Current config keys: " + Arrays.toString(DEFAULT_CONFIG.getExistingProperties()));
+                            break;
+                        }
+                    }
+                    if (parsedCommand.length == 3) {
+                        if (parsedCommand[1].equalsIgnoreCase("get")) {
+                            Logger.log(LogType.INFORMATION, "The current config value for '" + parsedCommand[2] + "' is: " + DEFAULT_CONFIG.read(parsedCommand[2]));
+                            break;
+                        }
+                    }
+                    if (parsedCommand.length == 4) {
+                        if (parsedCommand[1].equalsIgnoreCase("set")) {
+                            if (DEFAULT_CONFIG.write(parsedCommand[2], parsedCommand[3])) {
+                                Logger.log(LogType.INFORMATION, "The config value for '" + parsedCommand[2] + "' has been set to: " + parsedCommand[3]);
+                            } else {
+                                Logger.log(LogType.ERROR, "The config value for '" + parsedCommand[2] + "' can not be set!");
+                            }
+                            break;
+                        }
+                    }
+                    Logger.log(LogType.INFORMATION, "Command syntax: config <list|get|set> (property) (value)");
+                    break;
                 case "close":
                     Logger.log(LogType.INFORMATION, "Closing DevConsole frame...");
                     dispose();
+                    break;
+                case "restart":
+                    getController().stop(true);
+                    break;
+                case "update":
+                    if (parsedCommand.length == 2) {
+                        if (parsedCommand[1].equalsIgnoreCase("check")) {
+                            UpdateChecker.logUpdateCheck();
+                            break;
+                        }
+                        if (parsedCommand[1].equalsIgnoreCase("run")) {
+                            Logger.log(LogType.INFORMATION, "Checking for new update ...");
+                            if (UpdateChecker.updateAvailable()) {
+                                try {
+                                    Logger.log(LogType.INFORMATION, "Downloading update version " + UpdateChecker.getLatestVersionString() + "...");
+                                    UpdateChecker.downloadLatestInstaller(true);
+                                } catch (IOException e) {
+                                    Logger.log(LogType.INFORMATION, "Cannot download update! (VERSION_STRING_NOT_AVAILABLE)");
+                                    Logger.logException(e);
+                                }
+                            } else {
+                                Logger.log(LogType.INFORMATION, "No new update available!");
+                            }
+                            break;
+                        }
+                    }
+                    Logger.log(LogType.INFORMATION, "Command syntax: update <check|run>");
                     break;
                 default:
                     Logger.log(LogType.ERROR, "The command '" + parsedCommand[0] + "' does not exist!");

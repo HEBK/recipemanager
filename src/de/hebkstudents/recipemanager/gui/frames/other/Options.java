@@ -17,6 +17,7 @@ public class Options extends AppFrame {
     private JCheckBox checkUpdatesCheckbox;
     private JButton saveButton;
     private JButton closeButton;
+    private JCheckBox animatedMenuLogoCheckBox;
 
     public Options(GUIController controller) {
         super(controller, buildFrameTitle("Optionen"), DEFAULT_DIMENSION, true);
@@ -36,22 +37,26 @@ public class Options extends AppFrame {
     private void initializeComponents()
     {
         checkUpdatesCheckbox.setSelected(Boolean.parseBoolean(DEFAULT_CONFIG.read("checkForUpdates")));
-
+        animatedMenuLogoCheckBox.setSelected(Boolean.parseBoolean(DEFAULT_CONFIG.read("animatedMenuLogo")));
 
         closeButton.addActionListener(e -> dispose());
         saveButton.addActionListener(e -> {
+            boolean lafChanged = !((LaF) Objects.requireNonNull(designComboBox.getSelectedItem())).getClassName().equals(UIManager.getLookAndFeel().getClass().getName());
+            boolean logoDesignChanged = animatedMenuLogoCheckBox.isSelected() != Boolean.parseBoolean(DEFAULT_CONFIG.read("animatedMenuLogo"));
+            boolean restartNeeded = lafChanged || logoDesignChanged;
+            
             ArrayList<Boolean> status = new ArrayList<>();
             status.add(DEFAULT_CONFIG.write("checkForUpdates", String.valueOf(checkUpdatesCheckbox.isSelected())));
             status.add(DEFAULT_CONFIG.write("designClass", ((LaF) Objects.requireNonNull(designComboBox.getSelectedItem())).getClassName()));
-
+            status.add(DEFAULT_CONFIG.write("animatedMenuLogo", String.valueOf(animatedMenuLogoCheckBox.isSelected())));
 
             if (status.stream().anyMatch(j -> !j)) {
                 JOptionPane.showMessageDialog(this, "Ein oder mehrere Einstellungen konnten nicht gespeichert werden!", buildFrameTitle("Warnung"), JOptionPane.WARNING_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Optionen gespeichert" + ((!((LaF)designComboBox.getSelectedItem()).getClassName().equals(UIManager.getLookAndFeel().getClass().getName())) ? "\n\nÄnderung am Erscheinungsbild: Die App wird neugestartet!" : ""), buildFrameTitle("Optionen gespeichert"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Optionen gespeichert!" + (restartNeeded ? "\n\nDie App wird wegen Änderungen am Erscheinungsbild neugestartet!" : ""), buildFrameTitle("Optionen gespeichert"), JOptionPane.INFORMATION_MESSAGE);
             }
 
-            if (!((LaF)designComboBox.getSelectedItem()).getClassName().equals(UIManager.getLookAndFeel().getClass().getName())) {
+            if (restartNeeded) {
                 RecipeManager.loadLookAndFeel(((LaF)designComboBox.getSelectedItem()).getClassName());
                 getController().stop(true);
             } else {

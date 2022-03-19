@@ -7,11 +7,14 @@ import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 
 import javax.swing.*;
+import javax.swing.text.IconView;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Objects;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
@@ -65,6 +68,9 @@ public class Menu extends AppFrame {
      * Button that opens the folder which contains all custom application data
      */
     private JButton dataFolderButton;
+    private JButton optionsButton;
+    private JButton aboutButton;
+    private JLabel iconLabel;
 
     /**
      * Menu constructor. Initializes the frame from its superclass.
@@ -113,5 +119,28 @@ public class Menu extends AppFrame {
         ingredientsButton.addActionListener(controller);
         addRecipeButton.setName("buttonMenuAddRecipe");
         addRecipeButton.addActionListener(controller);
+        optionsButton.setName("buttonMenuOptions");
+        optionsButton.addActionListener(controller);
+        aboutButton.setName("buttonMenuAbout");
+        aboutButton.addActionListener(controller);
+
+        // Animated logo
+        Thread logoAnimator = new Thread(() -> {
+            File folder = new File("resources/images/gif/page-turning-book-2/splits");
+            File[] listOfFiles = folder.listFiles();
+            assert listOfFiles != null;
+            File[] files = new File[listOfFiles.length];
+            for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    files[i] = new File("resources/images/gif/page-turning-book-2/splits/" + listOfFiles[i].getName());
+                }
+            }
+            for (int i = 0; i < files.length; i++) {
+                iconLabel.setIcon(new ImageIcon(files[i].getPath()));
+                try { Thread.sleep(40); } catch (InterruptedException ignored) {}
+                if (i == files.length-1) i = 0;
+            }
+        });
+        if (Boolean.parseBoolean(DEFAULT_CONFIG.read("animatedMenuLogo"))) logoAnimator.start();
     }
 }

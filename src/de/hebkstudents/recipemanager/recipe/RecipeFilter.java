@@ -38,9 +38,6 @@ public class RecipeFilter implements SimpleFilter {
         this.sqlOptions = sqlOptions;
     }
 
-
-
-
     @Override
     public String getSQLOptions() {
 
@@ -63,5 +60,33 @@ public class RecipeFilter implements SimpleFilter {
     @Override
     public String getSQLQuery() {
         return null;
+    }
+
+    public Boolean getVegan() {
+        return isVegan;
+    }
+
+    public Boolean getVegetarian() {
+        return isVegetarian;
+    }
+
+    public Ingredient[] getIngredients() {
+        return ingredients;
+    }
+
+    public Integer getDifficulty() {
+        return difficulty;
+    }
+
+    public Integer getTime() {
+        return time;
+    }
+
+    public RecipeCategory getCategory() {
+        return category;
+    }
+
+    public String getQuery() {
+        return query;
     }
 }

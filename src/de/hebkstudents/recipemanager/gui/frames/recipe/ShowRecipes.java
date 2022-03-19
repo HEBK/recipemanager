@@ -136,8 +136,8 @@ public class ShowRecipes extends AppFrame {
             rows[i][1] = recipes[i].getName();
             rows[i][2] = recipes[i].getCategory().getName();
             rows[i][3] = RecipeController.getDifficultyByID(recipes[i].getDifficulty());
-            rows[i][4] = new ArrayList<>(Arrays.asList(recipes[i].getIngredients())).stream().allMatch(Ingredient::isVegetarian);
-            rows[i][5] = new ArrayList<>(Arrays.asList(recipes[i].getIngredients())).stream().allMatch(Ingredient::isVegan);
+            rows[i][4] = recipes[i].isVegetarian();
+            rows[i][5] = recipes[i].isVegan();
             rows[i][6] = recipes[i].getTime() + " Minuten";
         }
 
@@ -161,19 +161,12 @@ public class ShowRecipes extends AppFrame {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                switch (columnIndex) {
-                    case 0:
-                        return Integer.class;
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 6:
-                        return String.class;
-                    case 4:
-                    case 5:
-                        return Boolean.class;
-                    default: return null;
-                }
+                return switch (columnIndex) {
+                    case 0 -> Integer.class;
+                    case 1, 2, 3, 6 -> String.class;
+                    case 4, 5 -> Boolean.class;
+                    default -> null;
+                };
             }
         };
 

@@ -100,19 +100,26 @@ public class RecipeController {
         return recipesArray;
     }
 
-    public static boolean deleteRecipe (Recipe recipe) throws  InvalidRecipeException {
-        if (recipe == null) {
-            throw new InvalidRecipeException("The recipe object is broken an can therefore not get added!");
-        }
-        while(DatabaseController.getConnection().prepareStatement("SELECT ingredients FROM RecipeIngredience ") != null){
 
+    public static Recipe[] getRecipes(RecipeFilter filter)
+    {
+        ArrayList<Recipe> recipes = new ArrayList<>();
+        for (Recipe r : getRecipes()) {
+//            if (filter.getQuery() != null && )
         }
 
+        Recipe[] recipeArray = new Recipe[recipes.size()];
+        return recipes.toArray(recipeArray);
+    }
+
+
+
+
+    public static boolean deleteRecipe (Recipe recipe) {
         return false;
     }
 
     public static boolean deleteRecipe (int recipeID) {
-
         return false;
     }
 

@@ -2,7 +2,8 @@ package de.hebkstudents.recipemanager.recipe;
 
 import de.hebkstudents.recipemanager.ingredient.Ingredient;
 
-import java.awt.desktop.PreferencesEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Recipe {
 
@@ -52,6 +53,16 @@ public class Recipe {
             return false;
         }
         return false;
+    }
+
+    public boolean isVegan()
+    {
+        return new ArrayList<>(Arrays.asList(getIngredients())).stream().allMatch(Ingredient::isVegan);
+    }
+
+    public boolean isVegetarian()
+    {
+        return new ArrayList<>(Arrays.asList(getIngredients())).stream().allMatch(Ingredient::isVegetarian);
     }
 
     //get-/setter

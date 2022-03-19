@@ -2,11 +2,6 @@ package de.hebkstudents.recipemanager;
 
 import com.bulenkov.darcula.DarculaLaf;
 import de.hebkstudents.recipemanager.gui.GUIController;
-import de.hebkstudents.recipemanager.gui.frames.recipe.ShowRecipe;
-import de.hebkstudents.recipemanager.ingredient.Ingredient;
-import de.hebkstudents.recipemanager.recipe.Recipe;
-import de.hebkstudents.recipemanager.recipe.RecipeCategory;
-import de.hebkstudents.recipemanager.recipe.RecipeController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import de.hebkstudents.recipemanager.storage.StorageBackend;
 import eu.cr4zyfl1x.logger.LogType;
@@ -58,6 +53,8 @@ public class RecipeManager {
 
         // Log end of main
         Logger.log(LogType.SYSTEM, "App " + APPNAME + " successfully loaded!");
+
+        if ("Mehl".matches(".*"+"hl"+".*")) System.out.println("yas");
     }
 
     /**

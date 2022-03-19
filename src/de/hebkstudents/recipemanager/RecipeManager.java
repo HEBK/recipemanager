@@ -9,6 +9,7 @@ import de.hebkstudents.recipemanager.ingredient.IngredientController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import de.hebkstudents.recipemanager.storage.DefaultConfig;
 import de.hebkstudents.recipemanager.storage.StorageBackend;
+import de.hebkstudents.recipemanager.utils.UpdateChecker;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 import eu.cr4zyfl1x.logger.exception.InvalidLoggerException;
@@ -24,12 +25,16 @@ import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
 public class RecipeManager {
+
+    private static RecipeManager manager;
 
     /**
      * Main method
@@ -57,7 +62,7 @@ public class RecipeManager {
         });
 
         // Create instance of App
-        RecipeManager manager = new RecipeManager();
+        manager = new RecipeManager();
 
         // Initialize database connection
         initializeDatabase();
@@ -80,7 +85,7 @@ public class RecipeManager {
         // Temporary logger
         Logger.load(new Logger("RM_TEMP", new Date()));
         Logger.log(LogType.SYSTEM, "Initializing filesystem storage backend ...");
-        STORAGE_BACKEND = new StorageBackend(STORAGE_PATH, new String[]{"config", "data", "logs", "images/recipes"});
+        STORAGE_BACKEND = new StorageBackend(STORAGE_PATH, new String[]{"config", "cache", "data", "logs", "images/recipes"});
         DB_STRUCTURE_INITIALIZED = STORAGE_BACKEND.directoriesExist();
         if (!DB_STRUCTURE_INITIALIZED) {
             Logger.log(LogType.SYSTEM, "Creating necessary directories in '" + STORAGE_BACKEND.getRootDirectory() + "' ...");
@@ -103,6 +108,7 @@ public class RecipeManager {
                     boolean updateCheck = JOptionPane.showConfirmDialog(null, "Do you want to check for newer versions of " + APPNAME + " at startup?", APPNAME + " | " + "Update Checker", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
                     DEFAULT_CONFIG.write("checkForUpdates", String.valueOf(updateCheck));
                     DEFAULT_CONFIG.write("designClass", "com.bulenkov.darcula.DarculaLaf");
+                    DEFAULT_CONFIG.write("animatedMenuLogo", "false");
                     return;
                 }
             } else {
@@ -123,29 +129,8 @@ public class RecipeManager {
     {
         if (Boolean.parseBoolean(DEFAULT_CONFIG.read("checkForUpdates"))) {
             new Thread(() -> {
-                try {
-                    URL url = new URL("https://cdn.kleine-vorholt.eu/software/hebk/recipemanager/dl/version.php?type=raw");
-                    Scanner scanner = new Scanner(url.openStream());
-                    String version = scanner.nextLine();
-                    if (version.isEmpty() || version.equals(" ") || version.equals("\n")) version = "n/A";
-
-                    if (!version.equals(VERSION)) {
-                        Logger.log(LogType.INFORMATION, "Update checker: Version " + version + " is now available!");
-                        if (JOptionPane.showConfirmDialog(null, "Version "+ version + " von " + APPNAME + " ist nun verfügbar!\n\nMöchten Sie diese jetzt herunterladen?\n\nIhre Version: " + VERSION, APPNAME + " | Update verfügbar!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                            Desktop.getDesktop().browse(new URI("https://github.com/HEBK/recipemanager/releases/latest"));
-                            RecipeManager.shutdownApp(1);
-                        }
-                    } else {
-                        Logger.log(LogType.INFORMATION, "You're running the latest version of " + APPNAME + "!");
-                    }
-                } catch (IOException e) {
-                    Logger.log(LogType.ERROR, "Cannot check for updates!");
-                    Logger.logException(e);
-                } catch (URISyntaxException e) {
-                    Logger.log(LogType.ERROR, "Cannot open webpage to download update!");
-                    Logger.logException(e);
-                    JOptionPane.showMessageDialog(null, "Fehler beim Aufrufen der Downloadseite!\n\nFür mehr Informationen bitte den Log einsehen!", APPNAME + " | Fehler", JOptionPane.ERROR_MESSAGE);
-                }
+                UpdateChecker.logUpdateCheck();
+                UpdateChecker.showInformationPane(false);
             }).start();
         }
     }
@@ -225,6 +210,10 @@ public class RecipeManager {
 
         Logger.log(LogType.SYSTEM, "Finishing process with exit code " + status + " ...");
         System.exit(status);
+    }
+
+    public static RecipeManager getManager() {
+        return manager;
     }
 
     /*

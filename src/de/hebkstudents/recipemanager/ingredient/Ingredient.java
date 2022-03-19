@@ -163,6 +163,10 @@ public class Ingredient {
         return isVegan;
     }
 
+    public void setVegan(boolean vegan) {
+        isVegan = vegan;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }

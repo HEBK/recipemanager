@@ -6,11 +6,11 @@ import de.hebkstudents.recipemanager.gui.frametype.AppFrame;
 import de.hebkstudents.recipemanager.ingredient.Ingredient;
 import de.hebkstudents.recipemanager.ingredient.IngredientController;
 import de.hebkstudents.recipemanager.ingredient.IngredientFilter;
+import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.DEFAULT_DIMENSION;
@@ -20,7 +20,7 @@ public class ShowIngredients extends AppFrame {
     private JButton filterButton;
     private JButton addIngredientButton;
     private JButton deleteIngredientButton;
-    private JButton updateIngredientButton;
+    private JButton editIngredientButton;
     private JButton closeButton;
 
     private JTable ingredientsTable;
@@ -52,6 +52,25 @@ public class ShowIngredients extends AppFrame {
         filterButton.addActionListener(getController());
 
         closeButton.addActionListener(e -> dispose());
+
+        editIngredientButton.addActionListener(e -> {
+            Component a = this;
+            if (!ingredientsTable.getSelectionModel().isSelectionEmpty()) {
+                int selectedRow = ingredientsTable.getSelectedRow();
+                int ingredientID = Integer.parseInt(ingredientsTable.getValueAt(selectedRow, 0).toString());
+
+                try {
+                    Ingredient ingredient = IngredientController.getIngredient(ingredientID);
+                    getController().openFrameEditIngredient(ingredient);
+                    dispose();
+                } catch (IngredientNotFoundException ex) {
+
+                    new Thread(() -> JOptionPane.showMessageDialog(a, "Die Zutat kann nicht bearbeitet werden!\n\nDie Zutat existiert nicht", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+                    Logger.log(LogType.ERROR, "Cannot edit ingredient! Ingredient was not found!");
+                    Logger.logException(ex);
+                }
+            } else new Thread(() -> JOptionPane.showMessageDialog(a, "Es wurde keine Zutat ausgewählt!", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+        });
 
         addIngredientButton.setName("buttonIngredientsAddIngredient");
         addIngredientButton.addActionListener(controller);
@@ -124,18 +143,12 @@ public class ShowIngredients extends AppFrame {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                switch (columnIndex) {
-                    case 0:
-                        return Integer.class;
-                    case 1:
-                    case 4:
-                        return String.class;
-                    case 2:
-                    case 3:
-                        return Boolean.class;
-                    default:
-                        return null;
-                }
+                return switch (columnIndex) {
+                    case 0 -> Integer.class;
+                    case 1, 4 -> String.class;
+                    case 2, 3 -> Boolean.class;
+                    default -> null;
+                };
             }
         };
 

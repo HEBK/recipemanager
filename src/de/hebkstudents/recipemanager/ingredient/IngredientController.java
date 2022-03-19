@@ -1,9 +1,6 @@
 package de.hebkstudents.recipemanager.ingredient;
 
-import de.hebkstudents.recipemanager.exception.IngredientCategoryNotFoundException;
-import de.hebkstudents.recipemanager.exception.IngredientNotFoundException;
-import de.hebkstudents.recipemanager.exception.IngredientUnitNotFoundException;
-import de.hebkstudents.recipemanager.exception.RecipeNotFoundException;
+import de.hebkstudents.recipemanager.exception.*;
 import de.hebkstudents.recipemanager.recipe.RecipeController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import eu.cr4zyfl1x.logger.LogType;
@@ -128,7 +125,6 @@ public class IngredientController {
         }
     }
 
-
     public static Ingredient[] getIngredientsForRecipe(int recipeID) throws RecipeNotFoundException {
 
         if (!RecipeController.recipeExists(recipeID)) {
@@ -144,20 +140,37 @@ public class IngredientController {
             while (rs.next()) {
                 ingredients.add(new Ingredient(rs.getInt(1), rs.getInt(3), IngredientUnitController.getUnit(rs.getInt(2))));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IngredientNotFoundException e) {
-            e.printStackTrace();
-        } catch (IngredientUnitNotFoundException e) {
-            e.printStackTrace();
+        } catch (SQLException | IngredientNotFoundException | IngredientUnitNotFoundException e) {
+            Logger.log(LogType.ERROR, "There was an error while getting the ingredients of recipe " + recipeID);
+            Logger.logException(e);
         }
         Ingredient[] ingredientsArray = new Ingredient[ingredients.size()];
         ingredients.toArray(ingredientsArray);
-        return  ingredientsArray;
+        return ingredientsArray;
     }
 
+    public static boolean updateIngredient(Ingredient ingredient) throws InvalidIngredientException, IngredientNotFoundException {
 
+        if (ingredient == null || ingredient.getIngredientID() == null || ingredient.getIngredientCategory() == null) {
+            throw new InvalidIngredientException("Cannot update ingredient object. The ingredient object is invalid!");
+        }
+        if (!ingredientExists(ingredient.getIngredientID())) {
+            throw new IngredientNotFoundException("An ingredient with ID '" + ingredient.getIngredientID() + "' does not exist!");
+        }
 
+        try {
+            PreparedStatement ps = DatabaseController.getConnection().prepareStatement("UPDATE Ingredient SET name = ?, category = ?, isVegan = ?, isVegetarian = ? WHERE ingredientID = ?");
+            ps.setString(1, ingredient.getName());
+            ps.setInt(2, ingredient.getIngredientCategory().getCategoryID());
+            ps.setBoolean(3, ingredient.isVegan());
+            ps.setBoolean(4, ingredient.isVegetarian());
+            ps.setInt(5, ingredient.getIngredientID());
+            return ps.executeUpdate() > 0;
 
-
+        } catch (SQLException e) {
+            Logger.log(LogType.ERROR, "Cannot update ingredient " + ingredient.getName() + " because of an SQLException.");
+            Logger.logException(e);
+            return false;
+        }
+    }
 }

@@ -120,6 +120,35 @@ public class ShowRecipes extends AppFrame {
             }
         });
 
+        deleteRecipeButton.addActionListener(e -> {
+            if (!recipesTable.getSelectionModel().isSelectionEmpty()) {
+                int selectedRow = recipesTable.getSelectedRow();
+
+                try {
+                    int recipeID = Integer.parseInt(recipesTable.getValueAt(selectedRow, 0).toString());
+
+                    if (JOptionPane.showConfirmDialog(this, "Sind Sie sicher, dass Sie dieses Rezept löschen möchten?", buildFrameTitle("Rezept löschen"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                        if (RecipeController.deleteRecipe(recipeID)) {
+                            new Thread(() -> JOptionPane.showMessageDialog(this, "Das Rezept wurde erfolgreich gelöscht!", buildFrameTitle("Rezept gelöscht!"), JOptionPane.INFORMATION_MESSAGE)).start();
+                            recipesTableModel.removeRow(selectedRow);
+                            setCountLabel(recipesTable.getRowCount());
+                            return;
+                        }
+                        new Thread(() -> JOptionPane.showMessageDialog(this, "Beim Löschen des Rezepts ist ein Fehler aufgetreten!", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+                    }
+                } catch (NumberFormatException ex) {
+                    new Thread(() -> JOptionPane.showMessageDialog(this, "das Rezept konnte nicht gelesen werden!", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+                    Logger.logException(ex);
+                } catch (RecipeNotFoundException ex) {
+                    new Thread(() -> JOptionPane.showMessageDialog(this, "Das Rezept existiert nicht!", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+                    Logger.logException(ex);
+                }
+            } else {
+                new Thread(() -> JOptionPane.showMessageDialog(this, "Bitte wählen Sie ein Rezept aus, um es zu löschen!", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+            }
+        });
+
+
         setCountLabel(recipesTable.getRowCount());
     }
 

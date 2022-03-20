@@ -17,12 +17,24 @@ import java.util.Scanner;
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 import static de.hebkstudents.recipemanager.storage.AppProperties.APPNAME;
 
+/**
+ * Class UpdateChecker
+ * Manages App-Updates & Update-Searches
+ */
 public class UpdateChecker {
 
+    /**
+     * Temporarily cached latest version string
+     */
     private static String cacheVerString;
 
-    public static String getLatestVersionString() throws IOException {
-        if (cacheVerString != null) return cacheVerString;
+    /**
+     * Gets the latest version string from Update-Server
+     * @return Latest version String or 'n/A' if error
+     * @throws IOException If its was not possible to establish a connection to the update server
+     */
+    public static String getLatestVersionString(boolean ignoreCache) throws IOException {
+        if (cacheVerString != null && !ignoreCache) return cacheVerString;
 
         try {
             URL url = new URL(VERSION_STRING_SERVER_URL);
@@ -38,21 +50,29 @@ public class UpdateChecker {
         }
     }
 
+    /**
+     * Checks whether an update is available or not
+     * @return true if an update is available
+     */
     public static boolean updateAvailable()
     {
         try {
-            return !getLatestVersionString().equals(VERSION);
+            return !getLatestVersionString(true).equals(VERSION);
         } catch (IOException e) {
             Logger.logException(e);
         }
         return false;
     }
 
+    /**
+     * Shows Update information panes
+     * @param showUpToDateMessage If true -> Shows a pane if software is up-to-date
+     */
     public static void showInformationPane(boolean showUpToDateMessage)
     {
         if (updateAvailable()) {
             try {
-                if (JOptionPane.showConfirmDialog(null, "Version "+ getLatestVersionString() + " von " + APPNAME + " ist nun verfügbar!\n\nMöchten Sie diese jetzt herunterladen?\n\nIhre Version: " + VERSION, APPNAME + " | Update verfügbar!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (JOptionPane.showConfirmDialog(null, "Version "+ getLatestVersionString(false) + " von " + APPNAME + " ist nun verfügbar!\n\nMöchten Sie diese jetzt herunterladen?\n\nIhre Version: " + VERSION, APPNAME + " | Update verfügbar!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     JOptionPane.showMessageDialog(null, "Der Download wird gestartet, sobald Sie auf OK klicken oder dieses Fenster schließen.\nDies kann je nach Internetverbindung eine längere Zeit in Anspruch nehmen.\n\nSie werden benachrichtigt, wenn das Update bereit ist.", APPNAME + " | Update wird heruntergeladen ...", JOptionPane.INFORMATION_MESSAGE);
                     downloadLatestInstaller(true);
                 }
@@ -63,11 +83,14 @@ public class UpdateChecker {
         } else if (showUpToDateMessage) new Thread(() -> JOptionPane.showMessageDialog(null, "Ihre " + APPNAME + " Version ist aktuell!\n\nIhre Version: " + VERSION, APPNAME + " | Update Checker", JOptionPane.INFORMATION_MESSAGE)).start();
     }
 
+    /**
+     * Logs the update check procedure in the logfile
+     */
     public static void logUpdateCheck()
     {
         if (updateAvailable()) {
             try {
-                Logger.log(LogType.INFORMATION, "Update checker: Version " + getLatestVersionString() + " is now available!");
+                Logger.log(LogType.INFORMATION, "Update checker: Version " + getLatestVersionString(false) + " is now available!");
             } catch (IOException e) {
                 Logger.log(LogType.ERROR, "Unable to check for Updates! (IOException) -> Maybe no connection to update server");
                 Logger.logException(e);
@@ -77,6 +100,10 @@ public class UpdateChecker {
         Logger.log(LogType.INFORMATION, "You're running the latest version of " + APPNAME + "!");
     }
 
+    /**
+     * Downloads the latest installer from Update-Server
+     * @param showExecutePane Asks if the update should be executed
+     */
     public static void downloadLatestInstaller(boolean showExecutePane)
     {
         new Thread(() -> {

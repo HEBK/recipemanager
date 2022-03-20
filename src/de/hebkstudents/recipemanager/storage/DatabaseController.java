@@ -18,6 +18,11 @@ import java.sql.SQLException;
 import static de.hebkstudents.recipemanager.storage.AppProperties.MAIN_DATABASE_PATH;
 import static de.hebkstudents.recipemanager.storage.AppProperties.STORAGE_PATH;
 
+
+/**
+ * Class DatabaseController
+ * Manages the connections to the database
+ */
 public class DatabaseController {
 
     /**

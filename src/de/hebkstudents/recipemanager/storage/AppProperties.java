@@ -7,6 +7,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Class for general, static & dynamic, properties which are accessed during runtime and can not be changed by user
+ */
 public class AppProperties {
 
     /**
@@ -37,7 +40,7 @@ public class AppProperties {
     /**
      * App version string
      */
-    public static final String VERSION = "0.1.0-beta";
+    public static final String VERSION = "1.0.0-rc1";
 
     /**
      * Latest Version String
@@ -80,18 +83,18 @@ public class AppProperties {
             new LaF(UIManager.getSystemLookAndFeelClassName(), "System default")
     ));
 
+    /**
+     * Boolean which defines if the database structure was already initialized or not
+     */
     public static boolean DB_STRUCTURE_INITIALIZED;
 
+    /**
+     * Default Config Object for all general configuration values
+     */
     public static DefaultConfig DEFAULT_CONFIG;
 
     /**
      * Defines whether the StorageBackend and SQL is initialized or not
      */
     public static StorageBackend STORAGE_BACKEND;
-    public static void setStorageBackend(StorageBackend storageBackend) {
-        STORAGE_BACKEND = storageBackend;
-    }
-    public static StorageBackend getStorageBackend() {
-        return STORAGE_BACKEND;
-    }
 }

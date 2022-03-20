@@ -3,6 +3,10 @@ package de.hebkstudents.recipemanager.recipe;
 import de.hebkstudents.recipemanager.ingredient.Ingredient;
 import de.hebkstudents.recipemanager.interfaces.SimpleFilter;
 
+/**
+ * RecipeFilter
+ * Not yet in use
+ */
 public class RecipeFilter implements SimpleFilter {
 
     private final String query;

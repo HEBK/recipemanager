@@ -9,12 +9,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Class for IngredientCategory objects
+ */
 public class IngredientCategory {
-    //Attribute
+
+    /**
+     * Name of the category
+     */
     private String name;
+
+    /**
+     * ID of the category
+     */
     private int categoryID;
 
-    //Konstruktor
+    /**
+     * Constructor to construct an existing category from its ID
+     * @param categoryID ID of the category
+     * @throws IngredientCategoryNotFoundException If the category does not exist
+     */
     public IngredientCategory(int categoryID) throws IngredientCategoryNotFoundException {
         try {
             PreparedStatement ps = DatabaseController.getConnection().prepareStatement("SELECT * FROM IngredientCategory WHERE categoryID = ?");
@@ -32,31 +46,46 @@ public class IngredientCategory {
             Logger.logException(e);
         }
     }
+
+    /**
+     * Constructs a new Category by name and ID
+     * @param categoryID ID of category
+     * @param name Name of category
+     */
     public IngredientCategory(int categoryID, String name)
     {
         this.categoryID = categoryID;
         this.name = name;
     }
 
-    //Methoden
-
-    //get-/setter
+    /**
+     * Gets the categoryID
+     * @return categoryID
+     */
     public int getCategoryID() {
         return categoryID;
     }
 
-    public void setCategoryID(int categoryID) {
-        this.categoryID = categoryID;
-    }
-
+    /**
+     * Gets the name of the category
+     * @return name of the category
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name for the category
+     * @param name name of the category
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Overwritten method
+     * @return Category name
+     */
     @Override
     public String toString() {
         return getName();

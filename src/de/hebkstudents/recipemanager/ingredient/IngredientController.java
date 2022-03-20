@@ -11,26 +11,34 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Class which handles the ingredients
+ */
 public class IngredientController {
 
-    public static boolean addIngredient(Ingredient template)
+    /**
+     * Adds a new Ingredient to the database
+     * @param ingredient Valid Ingredient object
+     * @return true if successfully added
+     */
+    public static boolean addIngredient(Ingredient ingredient)
     {
-        if (!IngredientCategoryController.categoryExists(template.getIngredientCategory())) {
-            Logger.log(LogType.ERROR, "Ingredient could not be added because IngredientCategory '" + template.getIngredientCategory().getCategoryID() + "' does not exist!");
+        if (!IngredientCategoryController.categoryExists(ingredient.getIngredientCategory())) {
+            Logger.log(LogType.ERROR, "Ingredient could not be added because IngredientCategory '" + ingredient.getIngredientCategory().getCategoryID() + "' does not exist!");
             return false;
         }
         try {
             PreparedStatement ps = DatabaseController.getConnection().prepareStatement("INSERT INTO Ingredient (name, isVegan, isVegetarian, category) VALUES (?, ?, ?, ?)");
-            ps.setString(1, template.getName());
-            ps.setBoolean(2, template.isVegan());
-            ps.setBoolean(3, template.isVegetarian());
-            ps.setInt(4, template.getIngredientCategory().getCategoryID());
+            ps.setString(1, ingredient.getName());
+            ps.setBoolean(2, ingredient.isVegan());
+            ps.setBoolean(3, ingredient.isVegetarian());
+            ps.setInt(4, ingredient.getIngredientCategory().getCategoryID());
 
             if (ps.executeUpdate() > 0) {
-                Logger.log(LogType.INFORMATION, "Ingredient '" + template.getName() + "' has been added successfully!");
+                Logger.log(LogType.INFORMATION, "Ingredient '" + ingredient.getName() + "' has been added successfully!");
                 return true;
             }
-            Logger.log(LogType.ERROR, "Ingredient '" + template.getName() + "' could not be added! Maybe it already exists.");
+            Logger.log(LogType.ERROR, "Ingredient '" + ingredient.getName() + "' could not be added! Maybe it already exists.");
             return false;
         } catch (SQLException e) {
             Logger.log(LogType.ERROR, "Ingredient could not be added because of an SQLException. Further information below.");
@@ -39,19 +47,29 @@ public class IngredientController {
         }
     }
 
-    public static boolean deleteIngredient(Ingredient ingredient) throws IngredientNotFoundException {
-        if (ingredient != null) {
-            return deleteIngredient(ingredient.getIngredientID());
-        }
-        return false;
+    /**
+     * Deletes an Ingredient from the database
+     * @param ingredient Valid Ingredient object
+     * @return true if ingredient was deleted successfully
+     * @throws IngredientNotFoundException If Ingredient does not exist
+     * @throws InvalidIngredientException If a required property of Ingredient is missing
+     */
+    public static boolean deleteIngredient(Ingredient ingredient) throws IngredientNotFoundException, InvalidIngredientException  {
+
+        if (ingredient == null || ingredient.getIngredientID() == null) throw new InvalidIngredientException("It seems that your Ingredient Object is corrupted! Please check if it's not null and an ID exists!");
+        return deleteIngredient(ingredient.getIngredientID());
     }
 
+    /**
+     * Deletes an Ingredient from the database
+     * @param ingredientID Existing ingredient ID
+     * @return true if ingredient was deleted successfully
+     * @throws IngredientNotFoundException If Ingredient does not exist
+     */
     public static boolean deleteIngredient(int ingredientID) throws IngredientNotFoundException {
-
         if (!ingredientExists(ingredientID)) {
             throw new IngredientNotFoundException("An ingredient with ID '" + ingredientID + "' does not exist and can therefore not get deleted!");
         }
-
         try {
             PreparedStatement ps = DatabaseController.getConnection().prepareStatement("DELETE FROM Ingredient WHERE ingredientID = ?");
             ps.setInt(1, ingredientID);
@@ -66,6 +84,12 @@ public class IngredientController {
         return false;
     }
 
+    /**
+     * Gets an Ingredient by its ID from the database
+     * @param ingredientID Existing ingredientID
+     * @return Ingredient object if ingredient exists and is not corrupted
+     * @throws IngredientNotFoundException If Ingredient does not exist
+     */
     public static Ingredient getIngredient(int ingredientID) throws IngredientNotFoundException {
         if (!ingredientExists(ingredientID)) {
             throw new IngredientNotFoundException("An ingredient with ID '" + ingredientID + "' does not exist!");
@@ -86,13 +110,20 @@ public class IngredientController {
         return null;
     }
 
-
+    /**
+     * Gets all Ingredients as an Array of type Ingredient from the database
+     * @return Ingredient Array
+     */
     public static Ingredient[] getIngredients()
     {
         return getIngredients(null);
     }
 
-
+    /**
+     * Gets all or filtered Ingredients as Ingredient Array from the database
+     * @param filter Valid IngredientFilter object or null (null -> no filter -> all ingredients)
+     * @return Ingredient Array with all/filtered Ingredients
+     */
     public static Ingredient[] getIngredients(IngredientFilter filter)
     {
         String options = filter != null ? " " + (filter.getSQLOptions() != null ? filter.getSQLOptions() : "") : "";
@@ -112,6 +143,11 @@ public class IngredientController {
         return ingredientsArray;
     }
 
+    /**
+     * Checks whether an Ingredient exists or not
+     * @param ingredientID ID of the ingredient
+     * @return true if ingredient exists
+     */
     public static boolean ingredientExists(int ingredientID)
     {
         try {
@@ -125,6 +161,12 @@ public class IngredientController {
         }
     }
 
+    /**
+     * Gets all ingredients for a specific recipe as Object-Array of type Ingredient
+     * @param recipeID ID of the recipe
+     * @return Ingredient-Object-Array
+     * @throws RecipeNotFoundException If the recipe does not exist
+     */
     public static Ingredient[] getIngredientsForRecipe(int recipeID) throws RecipeNotFoundException {
 
         if (!RecipeController.recipeExists(recipeID)) {
@@ -149,6 +191,13 @@ public class IngredientController {
         return ingredientsArray;
     }
 
+    /**
+     * Updates an Ingredient using its changed object
+     * @param ingredient Valid Ingredient object
+     * @return true if the ingredient was successfully updated
+     * @throws InvalidIngredientException If a required property of Ingredient is missing
+     * @throws IngredientNotFoundException If an ingredient with its ID does not exist in the database
+     */
     public static boolean updateIngredient(Ingredient ingredient) throws InvalidIngredientException, IngredientNotFoundException {
 
         if (ingredient == null || ingredient.getIngredientID() == null || ingredient.getIngredientCategory() == null) {
@@ -171,6 +220,27 @@ public class IngredientController {
             Logger.log(LogType.ERROR, "Cannot update ingredient " + ingredient.getName() + " because of an SQLException.");
             Logger.logException(e);
             return false;
+        }
+    }
+
+    /**
+     * Checks if an ingredient is used by any recipe
+     * @param ingredientID ID of the recipe
+     * @return true if its used by an recipe and the ingredient exists
+     * @throws IngredientNotFoundException If the ingredient does not exist
+     * @throws SQLException If dependencies cannot be checked
+     */
+    public static boolean isInUse(int ingredientID) throws IngredientNotFoundException, SQLException {
+        if (!ingredientExists(ingredientID)) throw new IngredientNotFoundException("An ingredient with ID '" + ingredientID + "' does not exist!");
+
+        try {
+            PreparedStatement ps = DatabaseController.getConnection().prepareStatement("SELECT ingredientID FROM RecipeIngredient WHERE ingredientID = ?");
+            ps.setInt(1, ingredientID);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            Logger.log(LogType.ERROR, "Cannot check if ingredient is in use! (SQLException)");
+            throw e;
         }
     }
 }

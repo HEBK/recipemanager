@@ -2,17 +2,39 @@ package de.hebkstudents.recipemanager.ingredient;
 
 import de.hebkstudents.recipemanager.interfaces.SimpleFilter;
 
+/**
+ * Class to generate IngredientCategoryFilter objects from to filter IngredientCategories using the IngredientCategoryController
+ */
 public class IngredientCategoryFilter implements SimpleFilter {
 
+    /**
+     * Query String to filter category names
+     * (null -> All category names)
+     */
     private final String query;
+
+    /**
+     * Integer to filter category id's
+     * (null -> All category ID's)
+     */
     private final Integer categoryID;
 
+
+    /**
+     * Constructs a new IngredientCategoryFilter
+     * @param query Query String to filter category names (null -> All category names)
+     * @param categoryID Integer to filter category id's (null -> All category ID's)
+     */
     public IngredientCategoryFilter(String query, Integer categoryID)
     {
         this.query = query;
         this.categoryID = categoryID;
     }
 
+    /**
+     * Gets the filter options as SQL "WHERE ..." String
+     * @return SQL Conditional String
+     */
     @Override
     public String getSQLOptions()
     {
@@ -36,16 +58,12 @@ public class IngredientCategoryFilter implements SimpleFilter {
         return options.toString();
     }
 
+    /**
+     * Gets the whole SQL-Statement to get the filtered Categories
+     * @return SQL-Query-Statement to get the filtered categories
+     */
     @Override
     public String getSQLQuery() {
         return "SELECT * FROM IngredientCategory " + getSQLOptions();
-    }
-
-    public Integer getCategoryID() {
-        return categoryID;
-    }
-
-    public String getQuery() {
-        return query;
     }
 }

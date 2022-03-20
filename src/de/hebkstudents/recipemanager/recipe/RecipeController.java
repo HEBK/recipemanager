@@ -8,18 +8,28 @@ import de.hebkstudents.recipemanager.ingredient.IngredientController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * Class which handles the Recipes
+ */
 public class RecipeController {
-    //Attribute
-    //Konstruktor
 
-    //Methode
+    /**
+     * Adds a new Recipe to the database using its object
+     * @param recipe Valid Recipe Object
+     * @return true if recipe was added successfully
+     * @throws InvalidRecipeException If a required property of Recipe is missing
+     */
     public static boolean addRecipe (Recipe recipe) throws InvalidRecipeException {
 
         ArrayList<Boolean> status = new ArrayList<>();
@@ -66,7 +76,11 @@ public class RecipeController {
         return false;
     }
 
-    private static Integer getLastID()
+    /**
+     * Gets the ID of the last added Recipe
+     * @return ID of the last recipe
+     */
+    private static @Nullable Integer getLastID()
     {
         try {
             PreparedStatement ps = DatabaseController.getConnection().prepareStatement("SELECT max(recipeID) as `ID` FROM Recipe");
@@ -81,7 +95,11 @@ public class RecipeController {
         return null;
     }
 
-    public static Recipe[] getRecipes()
+    /**
+     * Gets all Recipes as Objects in a Recipe Array
+     * @return Recipe Array
+     */
+    public static Recipe @NotNull [] getRecipes()
     {
         ArrayList<Recipe> recipes = new ArrayList<>();
         try {
@@ -100,29 +118,12 @@ public class RecipeController {
         return recipesArray;
     }
 
-
-    public static Recipe[] getRecipes(RecipeFilter filter)
-    {
-        ArrayList<Recipe> recipes = new ArrayList<>();
-        for (Recipe r : getRecipes()) {
-//            if (filter.getQuery() != null && )
-        }
-
-        Recipe[] recipeArray = new Recipe[recipes.size()];
-        return recipes.toArray(recipeArray);
-    }
-
-
-
-
-    public static boolean deleteRecipe (Recipe recipe) {
-        return false;
-    }
-
-    public static boolean deleteRecipe (int recipeID) {
-        return false;
-    }
-
+    /**
+     * Gets a recipe by its ID from the database
+     * @param recipeID ID of the Recipe
+     * @return Recipe-Object if recipe exists
+     * @throws RecipeNotFoundException If recipe does not exist
+     */
     public static Recipe getRecipe (int recipeID) throws RecipeNotFoundException {
         if (!recipeExists(recipeID)) {
             throw new RecipeNotFoundException("The recipe with ID '" + recipeID + "' could not be found!");
@@ -144,6 +145,11 @@ public class RecipeController {
         return null;
     }
 
+    /**
+     * Checks whether a recipe exists or not
+     * @param recipeID ID of the recipe
+     * @return true if the recipe exists
+     */
     public static boolean recipeExists(int recipeID)
     {
         try {
@@ -157,6 +163,11 @@ public class RecipeController {
         }
     }
 
+    /**
+     * Converts the difficulty integer of a recipe object into the difficulty string
+     * @param difficulty Difficulty as integer
+     * @return Difficulty as string
+     */
     public static String getDifficultyByID(int difficulty)
     {
         return switch (difficulty) {
@@ -167,5 +178,58 @@ public class RecipeController {
         };
     }
 
-    //get-/setter
+    /**
+     * Deletes a recipe from the database
+     * @param recipeID ID of the recipe
+     * @return true if the recipe was deleted
+     * @throws RecipeNotFoundException If the recipe does not exist
+     */
+    public static boolean deleteRecipe(int recipeID) throws RecipeNotFoundException
+    {
+        if (!recipeExists(recipeID)) throw new RecipeNotFoundException("The recipe with ID '" + recipeID + "' could not be found!");
+
+        ArrayList<Ingredient> recipeIngredients = new ArrayList<>(Arrays.asList(IngredientController.getIngredientsForRecipe(recipeID)));
+        ArrayList<Boolean> status = new ArrayList<>();
+        for (Ingredient ingredient : recipeIngredients) {
+            status.add(removeIngredientFromRecipe(recipeID, ingredient.getIngredientID()));
+        }
+        if (status.stream().allMatch(j -> j)) {
+            try {
+                PreparedStatement ps = DatabaseController.getConnection().prepareStatement("DELETE FROM Recipe WHERE recipeID = ?");
+                ps.setInt(1, recipeID);
+                return ps.executeUpdate() > 0;
+            } catch (SQLException e) {
+                Logger.log(LogType.ERROR, "Unnable to delete recipe '" + recipeID + "'! (SQLException)");
+                Logger.logException(e);
+                return false;
+            }
+        }
+        Logger.log(LogType.ERROR, "Cannot delete recipe '" + recipeID + "'! Because the recipe depends on ingredients that can't get removed from it!");
+        return false;
+    }
+
+    /**
+     * Removes an Ingredient from a recipe
+     * @param recipeID ID of the recipe
+     * @param ingredientID ID of the ingredient
+     * @return true if recipe has this ingredient and if the ingredient was deleted
+     * @throws RecipeNotFoundException If the recipe does not exist
+     */
+    private static boolean removeIngredientFromRecipe(int recipeID, int ingredientID) throws RecipeNotFoundException {
+
+        if (!recipeExists(recipeID)) throw new RecipeNotFoundException("The recipe with ID '" + recipeID + "' could not be found!");
+        try {
+            PreparedStatement ps = DatabaseController.getConnection().prepareStatement("DELETE FROM RecipeIngredient WHERE recipeID = ? AND ingredientID = ?");
+            ps.setInt(1, recipeID);
+            ps.setInt(2, ingredientID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            Logger.log(LogType.ERROR, "Unnable to remove ingredient '" + ingredientID + "' from recipe '" + recipeID + "'!");
+            Logger.logException(e);
+            return false;
+        }
+    }
+
+
+
 }

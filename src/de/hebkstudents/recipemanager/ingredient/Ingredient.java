@@ -6,6 +6,9 @@ import eu.cr4zyfl1x.logger.Logger;
 
 import java.util.Objects;
 
+/**
+ * Class to generate ingredient objects for recipes and other
+ */
 public class Ingredient {
 
     /**
@@ -147,26 +150,50 @@ public class Ingredient {
         return name;
     }
 
+    /**
+     * Sets the name of the ingredient
+     * @param name name of the ingredient
+     */
     public void setName(String name) {
         this.name = name;
     }
 
-    public boolean isVegetarian() {
-        return isVegetarian;
-    }
-
-    public void setVegetarian(boolean vegetarian) {
-        isVegetarian = vegetarian;
-    }
-
+    /**
+     * Gets the boolean if the ingredient is vegan
+     * @return true if its vegan
+     */
     public boolean isVegan() {
         return isVegan;
     }
 
+    /**
+     * Defines if the ingredient is vegan
+     * @param vegan true if it is vegan
+     */
     public void setVegan(boolean vegan) {
         isVegan = vegan;
     }
 
+    /**
+     * Gets the boolean if the ingredient is vegetarian
+     * @return true if its vegetarian
+     */
+    public boolean isVegetarian() {
+        return isVegetarian;
+    }
+
+    /**
+     * Defines if the ingredient is vegetarian
+     * @param vegetarian true if it is vegetarian
+     */
+    public void setVegetarian(boolean vegetarian) {
+        isVegetarian = vegetarian;
+    }
+
+    /**
+     * Gets the quantity of the ingredient
+     * @return Quantity (null -> not set)
+     */
     public Integer getQuantity() {
         return quantity;
     }

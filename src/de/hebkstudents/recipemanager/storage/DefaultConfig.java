@@ -9,6 +9,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Properties;
 
+/**
+ * Class DefaultConfig
+ * Class that manages the access to the defined properties file
+ */
 public class DefaultConfig {
 
     /**

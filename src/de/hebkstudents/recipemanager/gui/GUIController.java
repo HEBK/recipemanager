@@ -22,23 +22,84 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Controller class to handle frames
+ */
 public class GUIController implements ActionListener {
 
+    /**
+     * App-Object (RecipeManager) where the GUIController is referring to
+     */
     private RecipeManager app;
+
+    /**
+     * Defines if the controller is running
+     */
     private boolean running = false;
 
+    /**
+     * Object for Menu Frame
+     */
     private AppFrame menu;
+
+    /**
+     * Object for Recipe list frame
+     */
     private AppFrame showRecipes;
+
+    /**
+     * Object for frame that shows a specific recipe
+     */
     private ShowRecipe showRecipe;
+
+    /**
+     * Object for Ingredient list frame
+     */
     private AppFrame showIngredients;
+
+    /**
+     * Object for recipe filter frame
+     */
     private AppFrame recipeFilterFrame;
+
+    /**
+     * Object for frame to add a new recipe
+     */
     private AddRecipe addRecipe;
+
+    /**
+     * Object for DeveloperConsole frame
+     */
     private AppFrame developerConsole;
+
+    /**
+     * Object for ingredient filter frame
+     */
     private AppFrame ingredientFilterFrame;
+
+    /**
+     * Object for frame to add a new ingredient
+     */
     private AppFrame addIngredientFrame;
+
+    /**
+     * Object for frame to add an ingredient to a recipe
+     */
     private AppFrame addRecipeIngredientFrame;
+
+    /**
+     * Object for options frame
+     */
     private AppFrame options;
+
+    /**
+     * Object for frame to edit an ingredient
+     */
     private AppFrame editIngredient;
+
+    /**
+     * Object for frame to show details about the software and its licenses
+     */
     private AppFrame aboutFrame;
 
     /**
@@ -107,6 +168,10 @@ public class GUIController implements ActionListener {
         menu = new Menu(this);
     }
 
+    /**
+     * Stops/Reboots the GUI controller
+     * @param restart Defines whether the GUI controller should bes stopped or restarted
+     */
     public void stop(boolean restart)
     {
         Logger.log(LogType.SYSTEM, "Shutting down GUI Controller ...");
@@ -277,6 +342,9 @@ public class GUIController implements ActionListener {
         }
     }
 
+    /**
+     * Opens the frame to edit app options
+     */
     private void openFrameOptions()
     {
         if (!focusFrame(options)) {
@@ -303,6 +371,10 @@ public class GUIController implements ActionListener {
         return false;
     }
 
+    /**
+     * OPens the frame to edit an ingredient
+     * @param ingredient Ingredient object to edit
+     */
     public void openFrameEditIngredient(Ingredient ingredient)
     {
         if (showIngredients != null) {
@@ -314,6 +386,9 @@ public class GUIController implements ActionListener {
         }
     }
 
+    /**
+     * Opens the frame with details about the software and its licenses
+     */
     public void openFrameAbout()
     {
         if (!focusFrame(aboutFrame)) {
@@ -321,6 +396,10 @@ public class GUIController implements ActionListener {
         }
     }
 
+    /**
+     * ActionEvent Receiver that is may triggerred when a button or other components are referring to the controller to handle their events
+     * @param e Triggered Event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         String componentID = ((Component) e.getSource()).getName();

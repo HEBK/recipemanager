@@ -1,20 +1,25 @@
 package de.hebkstudents.recipemanager.recipe;
 
-import de.hebkstudents.recipemanager.exception.IngredientNotFoundException;
 import de.hebkstudents.recipemanager.exception.RecipeCategoryNotFoundException;
-import de.hebkstudents.recipemanager.ingredient.Ingredient;
-import de.hebkstudents.recipemanager.ingredient.IngredientCategory;
-import de.hebkstudents.recipemanager.ingredient.IngredientUnit;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import eu.cr4zyfl1x.logger.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Class which handles the RecipeCategories
+ */
 public class RecipeCategoryController {
 
+    /**
+     * Checks whether a category exists or not
+     * @param categoryID ID of the category
+     * @return true if category exists
+     */
     public static boolean categoryExists(int categoryID)
     {
         try {
@@ -28,7 +33,11 @@ public class RecipeCategoryController {
         }
     }
 
-    public static RecipeCategory[] getAllCategories()
+    /**
+     * Gets all RecipeCategories as Objects in an RecipeCategory Array
+     * @return RecipeCategory Array
+     */
+    public static RecipeCategory @NotNull [] getAllCategories()
     {
         ArrayList<RecipeCategory> categories = new ArrayList<>();
         try {
@@ -45,6 +54,12 @@ public class RecipeCategoryController {
         return categoryArray;
     }
 
+    /**
+     * Gets a RecipeCategory by its ID from the database
+     * @param categoryID ID of the category
+     * @return Object of RecipeCategory if category exists
+     * @throws RecipeCategoryNotFoundException If Category does not exist
+     */
     public static RecipeCategory getCategory(int categoryID) throws RecipeCategoryNotFoundException {
         if (!categoryExists(categoryID)) {
             throw new RecipeCategoryNotFoundException("A recipe category with ID '" + categoryID + "' does not exist!");
@@ -61,11 +76,4 @@ public class RecipeCategoryController {
         }
         return null;
     }
-
-
-
-
-
-
-
 }

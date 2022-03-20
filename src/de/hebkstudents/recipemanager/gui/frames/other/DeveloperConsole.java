@@ -245,7 +245,7 @@ public class DeveloperConsole extends AppFrame {
                             Logger.log(LogType.INFORMATION, "Checking for new update ...");
                             if (UpdateChecker.updateAvailable()) {
                                 try {
-                                    Logger.log(LogType.INFORMATION, "Downloading update version " + UpdateChecker.getLatestVersionString() + "...");
+                                    Logger.log(LogType.INFORMATION, "Downloading update version " + UpdateChecker.getLatestVersionString(true) + "...");
                                     UpdateChecker.downloadLatestInstaller(true);
                                 } catch (IOException e) {
                                     Logger.log(LogType.INFORMATION, "Cannot download update! (VERSION_STRING_NOT_AVAILABLE)");

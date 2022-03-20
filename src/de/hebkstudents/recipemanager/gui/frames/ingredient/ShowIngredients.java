@@ -12,23 +12,72 @@ import eu.cr4zyfl1x.logger.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.SQLException;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.DEFAULT_DIMENSION;
 
+/**
+ * ShowIngredients class
+ * Class for the frame that is used to show all available or filtered ingredients
+ */
 public class ShowIngredients extends AppFrame {
+
+    /**
+     * Root panel that is being added to the frame
+     */
     private JPanel root;
+
+    /**
+     * Button to open frame to filter ingredients
+     */
     private JButton filterButton;
+
+    /**
+     * Button to open frame to add a new ingredient
+     */
     private JButton addIngredientButton;
+
+    /**
+     * Button to delete selected ingredient
+     */
     private JButton deleteIngredientButton;
+
+    /**
+     * Button to open frame to edit the selected ingredient
+     */
     private JButton editIngredientButton;
+
+    /**
+     * Button to close this frame
+     */
     private JButton closeButton;
 
+    /**
+     * Table object of the table that contains the ingredients
+     */
     private JTable ingredientsTable;
+
+    /**
+     * Label that shows the current count of elements in table
+     */
     private JLabel countLabel;
+
+    /**
+     * TableModel for the table that contains the ingredients
+     */
     private DefaultTableModel ingredientsTableModel;
 
+    /**
+     * Current filter for ingredients
+     * If null, no filters are applied
+     */
     private final IngredientFilter filter;
 
+    /**
+     * ShowIngredients constructor. Initializes the frame from its superclass.
+     * @param controller GUIController which is used to manage the frame.
+     * @param filter Filter that should be applied to the table
+     */
     public ShowIngredients(GUIController controller, IngredientFilter filter) {
         super(controller, buildFrameTitle("Zutatenliste"), DEFAULT_DIMENSION, true);
         this.filter = filter;
@@ -46,6 +95,9 @@ public class ShowIngredients extends AppFrame {
         setCountLabel(ingredientsTable.getRowCount());
     }
 
+    /**
+     * Initializes the function of all buttons
+     */
     private void initButtons()
     {
         filterButton.setName("buttonIngredientFilter");
@@ -87,20 +139,24 @@ public class ShowIngredients extends AppFrame {
                 // Ask if ingredient should really be deleted
                 if (JOptionPane.showConfirmDialog(this, "Möchten Sie die ausgewählte Zutat wirklich löschen?", buildFrameTitle("Zutat löschen"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     try {
-                        if (IngredientController.deleteIngredient(ingredientID)) {
+                        if (!IngredientController.isInUse(ingredientID)) {
+                            if (IngredientController.deleteIngredient(ingredientID)) {
 
-                            // Show success msg
-                            new Thread(() -> JOptionPane.showMessageDialog(a, "Die Zutat wurde erfolgreich gelöscht!", buildFrameTitle("Zutat gelöscht"), JOptionPane.INFORMATION_MESSAGE)).start();
+                                // Show success msg
+                                new Thread(() -> JOptionPane.showMessageDialog(a, "Die Zutat wurde erfolgreich gelöscht!", buildFrameTitle("Zutat gelöscht"), JOptionPane.INFORMATION_MESSAGE)).start();
 
-                            // Delete Row from Table
-                            ingredientsTableModel.removeRow(selectedRow);
+                                // Delete Row from Table
+                                ingredientsTableModel.removeRow(selectedRow);
 
-                            // Set Count label
-                            setCountLabel(ingredientsTable.getRowCount());
+                                // Set Count label
+                                setCountLabel(ingredientsTable.getRowCount());
+                            } else {
+                                new Thread(() -> JOptionPane.showMessageDialog(a, "Beim Löschen der Zutat ist ein Fehler aufgetreten!\n\nWeitere Informationen können Sie dem Log entnehmen.", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+                            }
                         } else {
-                            new Thread(() -> JOptionPane.showMessageDialog(a, "Beim Löschen der Zutat ist ein Fehler aufgetreten!\n\nWeitere Informationen können Sie dem Log entnehmen.", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
+                            new Thread(() -> JOptionPane.showMessageDialog(a, "Die Zutat wird von einem Rezept verwendet und kann daher nicht gelöscht werden!", buildFrameTitle("Fehler"), JOptionPane.WARNING_MESSAGE)).start();
                         }
-                    } catch (IngredientNotFoundException ex) {
+                    } catch (IngredientNotFoundException | SQLException ex) {
                         new Thread(() -> JOptionPane.showMessageDialog(a, "Beim Löschen der Zutat ist ein Fehler aufgetreten!\n\nWeitere Informationen können Sie dem Log entnehmen.", buildFrameTitle("Fehler"), JOptionPane.ERROR_MESSAGE)).start();
                         Logger.logException(ex);
                     }
@@ -111,6 +167,11 @@ public class ShowIngredients extends AppFrame {
         });
     }
 
+    /**
+     * Gets all/filtered ingredients as table ready two-dimensional-array
+     * @param filter Filter-Object to be applied (null -> no filter)
+     * @return All/filtered ingredients as two-dim-array
+     */
     private Object[][] getTableData(IngredientFilter filter)
     {
         Ingredient[] ingredients = IngredientController.getIngredients(filter);
@@ -127,7 +188,9 @@ public class ShowIngredients extends AppFrame {
         return rows;
     }
 
-
+    /**
+     * Generates the table from table model
+     */
     private void buildTable()
     {
         String[] headRow = {"ID", "Name", "Vegetarisch", "Vegan", "Kategorie"};
@@ -173,11 +236,18 @@ public class ShowIngredients extends AppFrame {
         ingredientsTable.getColumnModel().getColumn(4).setPreferredWidth((int) Math.floor(width*0.435));
     }
 
+    /**
+     * Sets the label which shows the current row count
+     * @param count Row count
+     */
     private void setCountLabel(int count)
     {
         countLabel.setText("Es wurden " + count + " Zutaten gefunden.");
     }
 
+    /**
+     * IntelliJ Idea custom component creation method
+     */
     private void createUIComponents() {
         Runnable buildTable = this::buildTable;
         buildTable.run();

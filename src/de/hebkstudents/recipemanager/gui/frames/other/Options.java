@@ -11,14 +11,46 @@ import java.util.Objects;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
+/**
+ * Options class
+ * Class for the frame that is used to configure app options
+ */
 public class Options extends AppFrame {
+
+    /**
+     * Root panel that is being added to the frame
+     */
     private JPanel root;
+
+    /**
+     * ComboBox which contains all available LaF's
+     */
     private JComboBox<LaF> designComboBox;
+
+    /**
+     * Checkbox that defines if the app should check for updates during startup
+     */
     private JCheckBox checkUpdatesCheckbox;
+
+    /**
+     * Button to save options
+     */
     private JButton saveButton;
+
+    /**
+     * Button to close the options frame
+     */
     private JButton closeButton;
+
+    /**
+     * Checkbox that defines if the logo in Menu should be animated
+     */
     private JCheckBox animatedMenuLogoCheckBox;
 
+    /**
+     * Options constructor. Initializes the frame from its superclass.
+     * @param controller GUIController which is used to manage the frame.
+     */
     public Options(GUIController controller) {
         super(controller, buildFrameTitle("Optionen"), DEFAULT_DIMENSION, true);
         init();
@@ -34,6 +66,10 @@ public class Options extends AppFrame {
         initializeComponents();
     }
 
+    /**
+     * Initializes the components in this frame
+     * (e.g. setting default values & ranges)
+     */
     private void initializeComponents()
     {
         checkUpdatesCheckbox.setSelected(Boolean.parseBoolean(DEFAULT_CONFIG.read("checkForUpdates")));
@@ -65,7 +101,9 @@ public class Options extends AppFrame {
         });
     }
 
-
+    /**
+     * IntelliJ Idea custom component creation method
+     */
     private void createUIComponents() {
         designComboBox = new JComboBox<>(LOOK_AND_FEEL_TPS.toArray(new LaF[0]));
 

@@ -19,24 +19,97 @@ import java.net.URISyntaxException;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
+/**
+ * About class
+ * Class for the frame that is used to show all information about the software, its license and the third-party libraries
+ */
 public class About extends AppFrame {
+
+    /**
+     * Root panel that is being added to the frame
+     */
     private JPanel root;
+
+    /**
+     * Button which opens the github repo page
+     */
     private JButton githubButton;
+
+    /**
+     * Button which closes this frame
+     */
     private JButton closeButton;
+
+    /**
+     * Panel that contains all components that describe the software
+     */
     private JPanel aboutPanel;
+
+    /**
+     * Button which switches the frames shown panel to the third-party-panel
+     */
     private JButton thirdPartyButton;
+
+    /**
+     * Button which switches the frames shown panel to the license-panel
+     */
     private JButton licenseButton;
+
+    /**
+     * Panel that contains all components with information about the used third-party contents
+     */
     private JPanel thirdPartyPanel;
+
+    /**
+     * Button on third-party-panel that is used to go back to about-panel
+     */
     private JButton tpBackButton;
+
+    /**
+     * TextPane on third-party-panel which contains the third-party licenses as text
+     */
     private JTextPane tpLicensesPane;
+
+    /**
+     * Button on third-party-panel which opens the third-party-license file
+     */
     private JButton tpFileButton;
+
+    /**
+     * Panel that contains all components with information about the apps license
+     */
     private JPanel licensePanel;
+
+    /**
+     * Button on license-panel that is used to go back to about-panel
+     */
     private JButton licenseBackButton;
+
+    /**
+     * Button on license-panel which opens the software-license file
+     */
     private JButton licenseFileButton;
+
+    /**
+     * TextPane on third-party-panel which contains the licenses as text
+     */
     private JTextPane licensePane;
+
+    /**
+     * Button on about-panel that executes an update check on click
+     */
     private JButton updateCheckButton;
+
+    /**
+     * Label that contains the appname and version
+     * (e.g. %APPNAME% - v%VERSION%)
+     */
     private JLabel appnameLabel;
 
+    /**
+     * About constructor. Initializes the frame from its superclass.
+     * @param controller GUIController which is used to manage the frame.
+     */
     public About(GUIController controller) {
         super(controller, buildFrameTitle("Über"), DEFAULT_DIMENSION, true);
         init();
@@ -53,6 +126,10 @@ public class About extends AppFrame {
         loadLicense();
     }
 
+    /**
+     * Initializes the components in this frame
+     * (e.g. setting default values & ranges)
+     */
     private void initializeComponents()
     {
         appnameLabel.setText(APPNAME + " - v" + VERSION);
@@ -95,6 +172,10 @@ public class About extends AppFrame {
         closeButton.addActionListener(e -> dispose());
     }
 
+    /**
+     * Method to change the current visible panel
+     * @param e Element of AboutPanel Enum
+     */
     private void changePanel(AboutPanels e)
     {
         aboutPanel.setVisible(false);
@@ -120,6 +201,9 @@ public class About extends AppFrame {
         }
     }
 
+    /**
+     * Load the third-party-license from file into textpane
+     */
     private void loadThirdPartyLicense()
     {
         new Thread(() -> {
@@ -139,6 +223,9 @@ public class About extends AppFrame {
         }).start();
     }
 
+    /**
+     * Load the license from file into textpane
+     */
     private void loadLicense()
     {
         new Thread(() -> {

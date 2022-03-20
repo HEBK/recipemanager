@@ -11,6 +11,9 @@ import java.awt.*;
 import static de.hebkstudents.recipemanager.storage.AppProperties.APPNAME;
 import static de.hebkstudents.recipemanager.storage.AppProperties.FRAME_ICON;
 
+/**
+ * Abstract Frame template class
+ */
 public abstract class AppFrame extends JFrame {
 
     /**

@@ -1,21 +1,25 @@
 package de.hebkstudents.recipemanager.ingredient;
 
-import de.hebkstudents.recipemanager.exception.IngredientCategoryNotFoundException;
-import de.hebkstudents.recipemanager.exception.IngredientNotFoundException;
 import de.hebkstudents.recipemanager.exception.IngredientUnitNotFoundException;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
-import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
+import org.jetbrains.annotations.NotNull;
 
-import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Class which handles the IngredientUnits
+ */
 public class IngredientUnitController {
 
-    public static IngredientUnit[] getAllUnits()
+    /**
+     * Gets all IngredientUnits as Objects in an IngredientUnit Array
+     * @return IngredientUnit Array
+     */
+    public static IngredientUnit @NotNull [] getAllUnits()
     {
         ArrayList<IngredientUnit> units = new ArrayList<>();
         try {
@@ -32,6 +36,11 @@ public class IngredientUnitController {
         return unitArray;
     }
 
+    /**
+     * Checks whether a unit exists or not
+     * @param unitID ID of the unit
+     * @return true if unit exists
+     */
     public static boolean unitExists(int unitID)
     {
         try {
@@ -45,6 +54,12 @@ public class IngredientUnitController {
         }
     }
 
+    /**
+     * Gets a Unit by its ID from the database
+     * @param unitID ID of the Unit
+     * @return IngredientUnit object if unit exists
+     * @throws IngredientUnitNotFoundException If unit does not exist
+     */
     public static IngredientUnit getUnit(int unitID) throws IngredientUnitNotFoundException {
         if (!unitExists(unitID)) {
             throw new IngredientUnitNotFoundException("An ingredientUnit with ID '" + unitID + "' does not exist!");

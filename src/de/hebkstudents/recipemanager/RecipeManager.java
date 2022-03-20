@@ -3,9 +3,11 @@ package de.hebkstudents.recipemanager;
 import com.bulenkov.darcula.DarculaLookAndFeelInfo;
 import de.hebkstudents.recipemanager.exception.IngredientNotFoundException;
 import de.hebkstudents.recipemanager.exception.InvalidMethodParameterException;
+import de.hebkstudents.recipemanager.exception.RecipeNotFoundException;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.gui.frames.ingredient.EditIngredient;
 import de.hebkstudents.recipemanager.ingredient.IngredientController;
+import de.hebkstudents.recipemanager.recipe.RecipeController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import de.hebkstudents.recipemanager.storage.DefaultConfig;
 import de.hebkstudents.recipemanager.storage.StorageBackend;
@@ -41,7 +43,7 @@ public class RecipeManager {
      * @param args Startup arguments
      * @throws SQLException if driver registration fails
      */
-    public static void main(String[] args) throws SQLException, InvalidLoggerException {
+    public static void main(String[] args) throws SQLException, InvalidLoggerException, RecipeNotFoundException {
 
         // Storage backend
         initializeStorageBackend();
@@ -85,7 +87,7 @@ public class RecipeManager {
         // Temporary logger
         Logger.load(new Logger("RM_TEMP", new Date()));
         Logger.log(LogType.SYSTEM, "Initializing filesystem storage backend ...");
-        STORAGE_BACKEND = new StorageBackend(STORAGE_PATH, new String[]{"config", "cache", "data", "logs", "images/recipes"});
+        STORAGE_BACKEND = new StorageBackend(STORAGE_PATH, new String[]{"config", "cache", "data", "logs", "images/recipes", "images/ingredients"});
         DB_STRUCTURE_INITIALIZED = STORAGE_BACKEND.directoriesExist();
         if (!DB_STRUCTURE_INITIALIZED) {
             Logger.log(LogType.SYSTEM, "Creating necessary directories in '" + STORAGE_BACKEND.getRootDirectory() + "' ...");
@@ -108,12 +110,10 @@ public class RecipeManager {
                     boolean updateCheck = JOptionPane.showConfirmDialog(null, "Do you want to check for newer versions of " + APPNAME + " at startup?", APPNAME + " | " + "Update Checker", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
                     DEFAULT_CONFIG.write("checkForUpdates", String.valueOf(updateCheck));
                     DEFAULT_CONFIG.write("designClass", "com.bulenkov.darcula.DarculaLaf");
-                    DEFAULT_CONFIG.write("animatedMenuLogo", "false");
-                    return;
+                    DEFAULT_CONFIG.write("animatedMenuLogo", "true");
                 }
-            } else {
-                return;
             }
+            return;
         } catch (InvalidMethodParameterException e) {
             Logger.log(LogType.CRITICAL, "Unable to initialize general configuration. Quitting ...");
             Logger.logException(e);
@@ -127,12 +127,10 @@ public class RecipeManager {
      */
     private static void checkForUpdates()
     {
-        if (Boolean.parseBoolean(DEFAULT_CONFIG.read("checkForUpdates"))) {
-            new Thread(() -> {
+        if (Boolean.parseBoolean(DEFAULT_CONFIG.read("checkForUpdates"))) new Thread(() -> {
                 UpdateChecker.logUpdateCheck();
                 UpdateChecker.showInformationPane(false);
-            }).start();
-        }
+        }).start();
     }
 
     /**
@@ -180,18 +178,12 @@ public class RecipeManager {
      */
     private static void registerDrivers(Driver[] drivers)
     {
-        if (Logger.isLoaded()) {
-            Logger.log(LogType.SYSTEM, "Loading " + drivers.length + " drivers ...");
-        }
+        if (Logger.isLoaded()) Logger.log(LogType.SYSTEM, "Loading " + drivers.length + " drivers ...");
         try {
-            for (Driver d: drivers) {
-                DriverManager.registerDriver(d);
-            }
+            for (Driver d: drivers) DriverManager.registerDriver(d);
             Logger.log(LogType.SYSTEM, "All drivers were loaded successfully!");
         } catch (SQLException e) {
-            if (Logger.isLoaded()) {
-                Logger.log(LogType.ERROR, "One or more drivers could not be loaded!\n" + e.getMessage());
-            }
+            if (Logger.isLoaded()) Logger.log(LogType.ERROR, "One or more drivers could not be loaded!\n" + e.getMessage());
         }
     }
 
@@ -207,23 +199,36 @@ public class RecipeManager {
         }
         Logger.log(LogType.SYSTEM, "Received app shutdown request ... (Status code: " + status + ")");
         DatabaseController.closeConnection();
-
         Logger.log(LogType.SYSTEM, "Finishing process with exit code " + status + " ...");
         System.exit(status);
     }
 
-    public static RecipeManager getManager() {
+    /**
+     * Gets the current RecipeManager App object
+     * @return RecipeManager App object
+     */
+    public static RecipeManager getManager()
+    {
         return manager;
     }
 
-    /*
-     * ---------------------------------
+    /**
+     * GUI Controller object
      */
-
     private GUIController controller;
+
+    /**
+     * Sets the GUI Controller
+     * @param controller GUI Controller object
+     */
     public void setController(GUIController controller) {
         this.controller = controller;
     }
+
+    /**
+     * Gets the GUIController
+     * @return GUIController object
+     */
     public GUIController getController() {
         return controller;
     }

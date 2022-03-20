@@ -5,7 +5,7 @@ CREATE TABLE RecipeCategory (
 
 CREATE TABLE Recipe (
     `recipeID`          INTEGER PRIMARY KEY,
-    `name`              VARCHAR(255) NULL DEFAULT NULL,
+    `name`              VARCHAR(255) UNIQUE NOT NULL,
     `time`              INT(4) NOT NULL DEFAULT 30,
     `difficulty`        INT(1) NOT NULL DEFAULT 0,
     `description`       TEXT NULL DEFAULT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE Recipe (
 
 CREATE TABLE IngredientCategory (
     `categoryID`        INTEGER PRIMARY KEY,
-    `name`              VARCHAR(255) NULL DEFAULT NULL
+    `name`              VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE Ingredient (

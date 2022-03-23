@@ -37,6 +37,8 @@ The following operating systems are supported:
 - Windows Server 2016
 - Windows 10
 - Windows Server 2019
+- Windows 11
+- Windows Server 2022
 
 _For Linux based operating systems please take a look into our ([Wiki]() Coming Soon)._
 

@@ -108,7 +108,7 @@ public class UpdateChecker {
     {
         new Thread(() -> {
             try {
-                URL latestInstallerURL = new URL("https://cdn.sarpex.eu/software/hebk/recipemanager/dl/download.php?type=exe");
+                URL latestInstallerURL = new URL(LATEST_VERSION_INSTALLER_URL);
                 URLConnection connection = latestInstallerURL.openConnection();
 
                 String filename;

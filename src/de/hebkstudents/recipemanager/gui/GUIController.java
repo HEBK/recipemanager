@@ -55,7 +55,7 @@ public class GUIController implements ActionListener {
     /**
      * Object for Ingredient list frame
      */
-    private AppFrame showIngredients;
+    private ShowIngredients showIngredients;
 
     /**
      * Object for recipe filter frame
@@ -296,14 +296,14 @@ public class GUIController implements ActionListener {
     /**
      * Opens the ingredient filter if not already opened
      */
-    private void openFrameIngredientFilter()
+    private void openFrameIngredientFilter(IngredientFilter filter)
     {
         if (showIngredients != null) {
             showIngredients.dispose();
             showIngredients = null;
         }
         if (!focusFrame(ingredientFilterFrame)) {
-            ingredientFilterFrame = new IngredientFilterFrame(this);
+            ingredientFilterFrame = new IngredientFilterFrame(this, filter);
         }
     }
 
@@ -408,7 +408,7 @@ public class GUIController implements ActionListener {
             case "buttonMenuShowIngredients" -> openFrameShowIngredients(null);
             case "buttonMenuAddRecipe" -> openFrameAddRecipe();
             case "buttonRecipeFilter" -> openFrameRecipeFilter();
-            case "buttonIngredientFilter" -> openFrameIngredientFilter();
+            case "buttonIngredientFilter" -> openFrameIngredientFilter(showIngredients != null && showIngredients.getFilter() != null ? showIngredients.getFilter() : null);
             case "buttonIngredientsAddIngredient" -> openFrameAddIngredient();
             case "buttonAddRecipeAddRecipeIngredient" -> openFrameAddRecipeIngredient();
             case "buttonMenuOptions" -> openFrameOptions();

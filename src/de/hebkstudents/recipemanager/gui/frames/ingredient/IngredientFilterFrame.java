@@ -52,13 +52,18 @@ public class IngredientFilterFrame extends AppFrame {
      */
     private JCheckBox activateFoodTypeCheckbox;
 
+    /**
+     * Current IngredientFilter object
+     */
+    private final IngredientFilter filter;
 
     /**
      * IngredientFilterFrame constructor. Initializes the frame from its superclass.
      * @param controller GUIController which is used to manage the frame.
      */
-    public IngredientFilterFrame(GUIController controller) {
+    public IngredientFilterFrame(GUIController controller, IngredientFilter filter) {
         super(controller, buildFrameTitle("Zutatenfilter"), DEFAULT_DIMENSION, true);
+        this.filter = filter;
         init();
     }
 
@@ -76,6 +81,18 @@ public class IngredientFilterFrame extends AppFrame {
      */
     private void initComponents()
     {
+        if (filter != null && filter.getSQLOptions() != null) {
+            queryTextfield.setText(filter.getQuery());
+            if (filter.getCategory() != null) categoryCombobox.setSelectedIndex(filter.getCategory().getCategoryID());
+            if (filter.getSQLOptions().contains("isVegan") || filter.getSQLOptions().contains("isVegetarian")) {
+                activateFoodTypeCheckbox.setSelected(true);
+                veganCheckBox.setSelected(filter.isVegan() != null ? filter.isVegan() : false);
+                vegetarianCheckBox.setSelected(filter.isVegetarian());
+                changeFoodTypeCheckboxesState();
+            }
+        }
+
+
         applyFilterButton.addActionListener(e -> getController().openFrameShowIngredients(new IngredientFilter(queryTextfield.getText(), getFoodTypeStates()[1], getFoodTypeStates()[0], ((IngredientCategory) Objects.requireNonNull(categoryCombobox.getSelectedItem())).getCategoryID() == -1 ? null : (IngredientCategory) categoryCombobox.getSelectedItem(), null)));
 
         vegetarianCheckBox.setSelected(true);

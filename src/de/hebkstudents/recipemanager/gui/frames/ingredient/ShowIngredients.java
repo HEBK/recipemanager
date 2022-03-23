@@ -245,6 +245,15 @@ public class ShowIngredients extends AppFrame {
         countLabel.setText("Es wurden " + count + " Zutaten gefunden.");
     }
 
+
+    /**
+     * Gets the current filter as IngredientFilter-Object
+     * @return Current filter object (null -> no filter)
+     */
+    public IngredientFilter getFilter() {
+        return filter;
+    }
+
     /**
      * IntelliJ Idea custom component creation method
      */

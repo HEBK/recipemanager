@@ -129,4 +129,36 @@ public class IngredientFilter implements SimpleFilter {
     public String getSQLQuery() {
         return "SELECT * FROM Ingredient " + getSQLOptions();
     }
+
+    /**
+     * Gets the filters query as String
+     * @return Query as String
+     */
+    public String getQuery() {
+        return query;
+    }
+
+    /**
+     * Checks if the filter is set to only vegan ingredients
+     * @return true if filter is set
+     */
+    public Boolean isVegan() {
+        return isVegan;
+    }
+
+    /**
+     * Checks if the filter is set to only vegetarian ingredients
+     * @return true if filter is set
+     */
+    public Boolean isVegetarian() {
+        return isVegetarian;
+    }
+
+    /**
+     * Gets the filters category object
+     * @return IngredientCategory Object
+     */
+    public IngredientCategory getCategory() {
+        return category;
+    }
 }

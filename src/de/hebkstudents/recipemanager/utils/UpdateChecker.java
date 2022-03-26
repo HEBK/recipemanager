@@ -29,6 +29,11 @@ public class UpdateChecker {
     private static String cacheVerString;
 
     /**
+     * Thread object for update downloads
+     */
+    private static Thread updateDownloader;
+
+    /**
      * Gets the latest version string from Update-Server
      * @return Latest version String or 'n/A' if error
      * @throws IOException If its was not possible to establish a connection to the update server
@@ -106,7 +111,12 @@ public class UpdateChecker {
      */
     public static void downloadLatestInstaller(boolean showExecutePane)
     {
-        new Thread(() -> {
+        if (updateDownloader != null && updateDownloader.isAlive()) {
+            new Thread(() -> JOptionPane.showMessageDialog(null, "Es ist bereits ein Aktualisierungsvorgang gestartet worden.\nBitte warten Sie, bis dieser abgeschlossen ist.", APPNAME + " | Warnung", JOptionPane.WARNING_MESSAGE)).start();
+            return;
+        }
+
+        updateDownloader = new Thread(() -> {
             try {
                 URL latestInstallerURL = new URL(LATEST_VERSION_INSTALLER_URL);
                 URLConnection connection = latestInstallerURL.openConnection();
@@ -143,6 +153,9 @@ public class UpdateChecker {
                 new Thread(() -> JOptionPane.showMessageDialog(null, "Es trat ein fehler während der Aktualisierung auf!\n\n" + e.getMessage(), APPNAME + " | Fehler", JOptionPane.ERROR_MESSAGE)).start();
                 RecipeManager.getManager().getController().run();
             }
-        }).start();
+        });
+
+        // Start Downloader
+        updateDownloader.start();
     }
 }

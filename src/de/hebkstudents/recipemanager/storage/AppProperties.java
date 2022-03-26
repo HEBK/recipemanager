@@ -61,7 +61,7 @@ public class AppProperties {
     /**
      * Path to the main SQLite database
      */
-    protected static final String MAIN_DATABASE_PATH = STORAGE_PATH + "/data/mainRCMGRDB.db";
+    protected static final String MAIN_DATABASE_PATH = STORAGE_PATH + "/data/main.db";
 
     /**
      * Path to the database structure SQL File

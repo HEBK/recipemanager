@@ -1,6 +1,9 @@
 package de.hebkstudents.recipemanager.recipe;
 
+import de.hebkstudents.recipemanager.exception.InvalidRecipeException;
+import de.hebkstudents.recipemanager.exception.InvalidRecipeFilterException;
 import de.hebkstudents.recipemanager.ingredient.Ingredient;
+import eu.cr4zyfl1x.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,6 +134,25 @@ public class Recipe {
     }
 
     /**
+     * Checks if the recipe has all the given ingredients
+     * @param ingredients Ingredients that must be included in recipe
+     * @return true if recipe has all given ingredients
+     */
+    public boolean hasIngredients(Ingredient[] ingredients)
+    {
+        ArrayList<Boolean> status = new ArrayList<>();
+        for (Ingredient i : ingredients) {
+            for (Ingredient j : this.ingredients) {
+                if (j.getName().equals(i.getName())) {
+                    status.add(true);
+                    break;
+                }
+            }
+        }
+        return status.size() == ingredients.length;
+    }
+
+    /**
      * Sets the ingredients for this recipe
      * @param ingredients Ingredients-Array
      */
@@ -216,5 +238,29 @@ public class Recipe {
      */
     public void setCategory(RecipeCategory category) {
         this.category = category;
+    }
+
+    /**
+     * Checks if the recipe matches to the desired RecipeFilter
+     * @param filter Valid RecipeFilter object
+     * @return true if filter matches
+     * @throws InvalidRecipeFilterException If RecipeFilter object is invalid
+     */
+    public boolean matchesFilter(RecipeFilter filter) throws InvalidRecipeFilterException {
+        if (filter == null) {
+            throw new InvalidRecipeFilterException("The given Recipe object is invalid. One or more values are missing or the object is corrupted!");
+        }
+
+        try {
+            return filter.matchesFilter(this);
+        } catch (InvalidRecipeException e) {
+            Logger.logException(e);
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 }

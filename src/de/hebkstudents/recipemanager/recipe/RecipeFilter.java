@@ -1,5 +1,6 @@
 package de.hebkstudents.recipemanager.recipe;
 
+import de.hebkstudents.recipemanager.exception.InvalidRecipeException;
 import de.hebkstudents.recipemanager.ingredient.Ingredient;
 import de.hebkstudents.recipemanager.interfaces.SimpleFilter;
 
@@ -42,6 +43,49 @@ public class RecipeFilter implements SimpleFilter {
         this.sqlOptions = sqlOptions;
     }
 
+    public boolean matchesFilter(Recipe recipe) throws InvalidRecipeException {
+        if (recipe == null || recipe.getName() == null || recipe.getCategory() == null || recipe.getIngredients() == null) {
+            throw new InvalidRecipeException("The given Recipe object is invalid. One or more values are missing or the object is corrupted!");
+        }
+
+        if (getQuery() != null) {
+            if (!recipe.getName().matches(".*" + getQuery() + ".*")) {
+                return false;
+            }
+        }
+        if (getCategory() != null) {
+            if (!recipe.getCategory().getName().equals(getCategory().getName())) {
+                return false;
+            }
+        }
+        if (getTime() != null) {
+            if (!(recipe.getTime() <= getTime())) {
+                return false;
+            }
+        }
+        if (getDifficulty() != null) {
+            if (!(recipe.getDifficulty() <= getDifficulty())) {
+                return false;
+            }
+        }
+        if (isVegan() != null) {
+            if (recipe.isVegan() != isVegan()) {
+                return false;
+            }
+        }
+        if (isVegetarian() != null) {
+            if (recipe.isVegetarian() != isVegetarian()) {
+                return false;
+            }
+        }
+        if (getIngredients() != null) {
+            if (!recipe.hasIngredients(getIngredients())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public String getSQLOptions() {
 
@@ -66,11 +110,11 @@ public class RecipeFilter implements SimpleFilter {
         return null;
     }
 
-    public Boolean getVegan() {
+    public Boolean isVegan() {
         return isVegan;
     }
 
-    public Boolean getVegetarian() {
+    public Boolean isVegetarian() {
         return isVegetarian;
     }
 

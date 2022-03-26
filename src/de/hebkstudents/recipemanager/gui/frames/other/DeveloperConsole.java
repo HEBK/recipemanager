@@ -175,7 +175,7 @@ public class DeveloperConsole extends AppFrame {
                             "- version      -> Shows the current installed app version\n" +
                             "- exit         -> Shuts down the app after confirmation\n" +
                             "- ingredient   -> Manages ingredients\n" +
-                            "- config       -> Maneges the app configuration\n" +
+                            "- config       -> Manages the app configuration\n" +
                             "- close        -> Closes this window\n" +
                             "- restart      -> Restarts the apps GUI\n" +
                             "- update       -> Executes an app update");
@@ -201,7 +201,7 @@ public class DeveloperConsole extends AppFrame {
                             break;
                         }
                     }
-                    Logger.log(LogType.INFORMATION, "Command syntax: ingredient <add|delete|modify> <ID>");
+                    Logger.log(LogType.INFORMATION, "Command syntax: ingredient <add|delete|edit> <ID>");
                     break;
                 case "config":
                     if (parsedCommand.length == 2) {

@@ -1,13 +1,7 @@
 package de.hebkstudents.recipemanager;
 
-import com.bulenkov.darcula.DarculaLookAndFeelInfo;
-import de.hebkstudents.recipemanager.exception.IngredientNotFoundException;
 import de.hebkstudents.recipemanager.exception.InvalidMethodParameterException;
-import de.hebkstudents.recipemanager.exception.RecipeNotFoundException;
 import de.hebkstudents.recipemanager.gui.GUIController;
-import de.hebkstudents.recipemanager.gui.frames.ingredient.EditIngredient;
-import de.hebkstudents.recipemanager.ingredient.IngredientController;
-import de.hebkstudents.recipemanager.recipe.RecipeController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import de.hebkstudents.recipemanager.storage.DefaultConfig;
 import de.hebkstudents.recipemanager.storage.StorageBackend;
@@ -17,20 +11,11 @@ import eu.cr4zyfl1x.logger.Logger;
 import eu.cr4zyfl1x.logger.exception.InvalidLoggerException;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Objects;
-import java.util.Scanner;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
@@ -43,7 +28,7 @@ public class RecipeManager {
      * @param args Startup arguments
      * @throws SQLException if driver registration fails
      */
-    public static void main(String[] args) throws SQLException, InvalidLoggerException, RecipeNotFoundException {
+    public static void main(String[] args) throws SQLException, InvalidLoggerException {
 
         // Storage backend
         initializeStorageBackend();

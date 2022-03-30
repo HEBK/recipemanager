@@ -72,11 +72,13 @@ public class UpdateChecker {
     /**
      * Shows Update information panes
      * @param showUpToDateMessage If true -> Shows a pane if software is up-to-date
+     * @param playNotificationSound If true -> A positive notification sound is played if an update is available
      */
-    public static void showInformationPane(boolean showUpToDateMessage)
+    public static void showInformationPane(boolean showUpToDateMessage, boolean playNotificationSound)
     {
         if (updateAvailable()) {
             try {
+                if (playNotificationSound) AudioPlayer.playPositiveNotification();
                 if (JOptionPane.showConfirmDialog(null, "Version "+ getLatestVersionString(false) + " von " + APPNAME + " ist nun verfügbar!\n\nMöchten Sie diese jetzt herunterladen?\n\nIhre Version: " + VERSION, APPNAME + " | Update verfügbar!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     JOptionPane.showMessageDialog(null, "Der Download wird gestartet, sobald Sie auf OK klicken oder dieses Fenster schließen.\nDies kann je nach Internetverbindung eine längere Zeit in Anspruch nehmen.\n\nSie werden benachrichtigt, wenn das Update bereit ist.", APPNAME + " | Update wird heruntergeladen ...", JOptionPane.INFORMATION_MESSAGE);
                     downloadLatestInstaller(true);

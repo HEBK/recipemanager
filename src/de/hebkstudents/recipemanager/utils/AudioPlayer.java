@@ -1,8 +1,11 @@
 package de.hebkstudents.recipemanager.utils;
 
 import de.hebkstudents.recipemanager.exception.InvalidAudioFileException;
+import eu.cr4zyfl1x.logger.LogType;
+import eu.cr4zyfl1x.logger.Logger;
 
 import javax.sound.sampled.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -115,4 +118,21 @@ public class AudioPlayer {
         clip.addLineListener(listener);
     }
 
+
+    /**
+     * Plays a positive notification sound.
+     * If AudioSystem is not available a simple beep is tried to be played
+     */
+    public static void playPositiveNotification()
+    {
+        new Thread(() -> {
+            try {
+                new AudioPlayer(new File("resources/sounds/notifications/positive-notification.wav")).start();
+            } catch (InvalidAudioFileException | LineUnavailableException e) {
+                Toolkit.getDefaultToolkit().beep();
+                Logger.log(LogType.WARNING, "An Exception was thrown while trying to play notification sound! Playing system beep instead.");
+                Logger.logException(e);
+            }
+        }).start();
+    }
 }

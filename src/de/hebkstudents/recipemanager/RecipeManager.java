@@ -114,7 +114,7 @@ public class RecipeManager {
     {
         if (Boolean.parseBoolean(DEFAULT_CONFIG.read("checkForUpdates"))) new Thread(() -> {
                 UpdateChecker.logUpdateCheck();
-                UpdateChecker.showInformationPane(false);
+                UpdateChecker.showInformationPane(false, true);
         }).start();
     }
 

@@ -108,6 +108,15 @@ public class UpdateChecker {
     }
 
     /**
+     * Checks if an update is currently running
+     * @return true if an update downloading process is running
+     */
+    public static boolean updateIsRunning()
+    {
+        return updateDownloader != null && updateDownloader.isAlive();
+    }
+
+    /**
      * Downloads the latest installer from Update-Server
      * @param showExecutePane Asks if the update should be executed
      */

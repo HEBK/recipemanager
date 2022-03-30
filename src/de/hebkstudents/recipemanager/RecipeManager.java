@@ -5,6 +5,7 @@ import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import de.hebkstudents.recipemanager.storage.DefaultConfig;
 import de.hebkstudents.recipemanager.storage.StorageBackend;
+import de.hebkstudents.recipemanager.utils.AudioPlayer;
 import de.hebkstudents.recipemanager.utils.UpdateChecker;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
@@ -181,6 +182,10 @@ public class RecipeManager {
         if (status == -1) {
             Logger.log(LogType.CRITICAL, "An critical error occoured. Exiting process immediately ...");
             System.exit(status);
+        }
+        if (UpdateChecker.updateIsRunning()) {
+            AudioPlayer.playWarningNotification();
+            if (JOptionPane.showConfirmDialog(null, "Es wird ein Aktualisierungsvorgang im Hintergrund ausgeführt.\n\nProgramm beenden?", APPNAME + " | Warnung", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) return;
         }
         Logger.log(LogType.SYSTEM, "Received app shutdown request ... (Status code: " + status + ")");
         DatabaseController.closeConnection();

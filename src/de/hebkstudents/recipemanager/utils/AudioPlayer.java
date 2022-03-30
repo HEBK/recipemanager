@@ -135,4 +135,21 @@ public class AudioPlayer {
             }
         }).start();
     }
+
+    /**
+     * Plays a warning notification sound.
+     * If AudioSystem is not available a simple beep is tried to be played
+     */
+    public static void playWarningNotification()
+    {
+        new Thread(() -> {
+            try {
+                new AudioPlayer(new File("resources/sounds/notifications/warning-info-notification.wav")).start();
+            } catch (InvalidAudioFileException | LineUnavailableException e) {
+                Toolkit.getDefaultToolkit().beep();
+                Logger.log(LogType.WARNING, "An Exception was thrown while trying to play notification sound! Playing system beep instead.");
+                Logger.logException(e);
+            }
+        }).start();
+    }
 }

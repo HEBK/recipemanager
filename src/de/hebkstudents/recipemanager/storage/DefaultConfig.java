@@ -138,7 +138,10 @@ public class DefaultConfig {
         return description;
     }
 
-
+    /**
+     * Gets all existing property keys in an Array
+     * @return Array with property keys
+     */
     public String[] getExistingProperties()
     {
         try {
@@ -151,8 +154,8 @@ public class DefaultConfig {
             }
             return propertyArray;
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.logException(e);
         }
-        return new String[0];
+        return new String[]{};
     }
 }

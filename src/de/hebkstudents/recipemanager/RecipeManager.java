@@ -124,7 +124,7 @@ public class RecipeManager {
     private static void initializeDatabase()
     {
         DatabaseController.initConnection();
-        if (!DB_STRUCTURE_INITIALIZED) {
+        if (!DB_STRUCTURE_INITIALIZED || (STORAGE_BACKEND.directoriesExist() && !new File(MAIN_DATABASE_PATH).exists())) {
             DatabaseController.executeStatementsFromFile(new File(DB_STRUCTURE_TEMPLATE), false, false);
             DatabaseController.initConnection();
             DatabaseController.executeStatementsFromFile(new File(DB_DATA_TEMPLATE), false, false);

@@ -73,5 +73,9 @@ The associated license for this software can be shown here:
 
 For license information of each library please take a look at [this file](https://github.com/HEBK/recipemanager/blob/master/resources/licenses/THIRD-PARTY) or visit the repositories of the used libraries.
 
+## Project webpages
+- **GitHub:** [https://github.com/HEBK/recipemanager](https://github.com/HEBK/recipemanager)
+- **Gitea:** [https://git.kleine-vorholt.eu/HEBK/recipemanager](https://git.kleine-vorholt.eu/HEBK/recipemanager)
+
 ## Bugs & Feature Requests
 Bugs & feature requests can be mentioned as an [issue](https://github.com/HEBK/recipemanager/issues) and will be processed as soon as possible.

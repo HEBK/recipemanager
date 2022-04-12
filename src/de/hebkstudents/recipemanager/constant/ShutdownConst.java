@@ -1,5 +1,8 @@
 package de.hebkstudents.recipemanager.constant;
 
+/**
+ * Integer constant values for app shutdown codes
+ */
 public class ShutdownConst {
 
     /**
@@ -13,6 +16,4 @@ public class ShutdownConst {
      * (-> Applied when app shuts down to execute update package)
      */
     public static final int UPDATE = -2;
-
-
 }

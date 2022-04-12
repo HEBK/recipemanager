@@ -1,5 +1,6 @@
 package de.hebkstudents.recipemanager;
 
+import de.hebkstudents.recipemanager.constant.ShutdownConst;
 import de.hebkstudents.recipemanager.exception.InvalidMethodParameterException;
 import de.hebkstudents.recipemanager.gui.GUIController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
@@ -179,11 +180,11 @@ public class RecipeManager {
      */
     public static void shutdownApp(int status)
     {
-        if (status == -1) {
+        if (status == ShutdownConst.CRITICAL) {
             Logger.log(LogType.CRITICAL, "An critical error occoured. Exiting process immediately ...");
             System.exit(status);
         }
-        if (UpdateChecker.updateIsRunning()) {
+        if (UpdateChecker.updateIsRunning() && status != ShutdownConst.UPDATE) {
             AudioPlayer.playWarningNotification();
             if (JOptionPane.showConfirmDialog(null, "Es wird ein Aktualisierungsvorgang im Hintergrund ausgeführt.\n\nProgramm beenden?", APPNAME + " | Warnung", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) return;
         }

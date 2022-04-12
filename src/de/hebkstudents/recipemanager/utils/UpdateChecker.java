@@ -1,6 +1,7 @@
 package de.hebkstudents.recipemanager.utils;
 
 import de.hebkstudents.recipemanager.RecipeManager;
+import de.hebkstudents.recipemanager.constant.ShutdownConst;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 
@@ -123,6 +124,7 @@ public class UpdateChecker {
     public static void downloadLatestInstaller(boolean showExecutePane)
     {
         if (updateDownloader != null && updateDownloader.isAlive()) {
+            AudioPlayer.playWarningNotification();
             new Thread(() -> JOptionPane.showMessageDialog(null, "Es ist bereits ein Aktualisierungsvorgang gestartet worden.\nBitte warten Sie, bis dieser abgeschlossen ist.", APPNAME + " | Warnung", JOptionPane.WARNING_MESSAGE)).start();
             return;
         }
@@ -152,7 +154,7 @@ public class UpdateChecker {
                         if (installer.exists()) {
                             RecipeManager.getManager().getController().stop(false);
                             Desktop.getDesktop().open(new File(STORAGE_PATH + "/cache/" + filename));
-                            RecipeManager.shutdownApp(1);
+                            RecipeManager.shutdownApp(ShutdownConst.UPDATE);
                         } else {
                             JOptionPane.showMessageDialog(null, "Der Installer konnte nicht ausgeführt werden!", APPNAME + " | Fehler", JOptionPane.ERROR_MESSAGE);
                         }

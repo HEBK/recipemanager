@@ -1,41 +1,31 @@
 package de.hebkstudents.recipemanager;
 
-import com.bulenkov.darcula.DarculaLookAndFeelInfo;
-import de.hebkstudents.recipemanager.exception.IngredientNotFoundException;
+import de.hebkstudents.recipemanager.constant.ShutdownConst;
 import de.hebkstudents.recipemanager.exception.InvalidMethodParameterException;
-import de.hebkstudents.recipemanager.exception.RecipeNotFoundException;
 import de.hebkstudents.recipemanager.gui.GUIController;
-import de.hebkstudents.recipemanager.gui.frames.ingredient.EditIngredient;
-import de.hebkstudents.recipemanager.ingredient.IngredientController;
-import de.hebkstudents.recipemanager.recipe.RecipeController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import de.hebkstudents.recipemanager.storage.DefaultConfig;
 import de.hebkstudents.recipemanager.storage.StorageBackend;
+import de.hebkstudents.recipemanager.utils.AudioPlayer;
 import de.hebkstudents.recipemanager.utils.UpdateChecker;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 import eu.cr4zyfl1x.logger.exception.InvalidLoggerException;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Objects;
-import java.util.Scanner;
 
 import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
 public class RecipeManager {
 
+    /**
+     * RecipeManager App object
+     */
     private static RecipeManager manager;
 
     /**
@@ -43,7 +33,7 @@ public class RecipeManager {
      * @param args Startup arguments
      * @throws SQLException if driver registration fails
      */
-    public static void main(String[] args) throws SQLException, InvalidLoggerException, RecipeNotFoundException {
+    public static void main(String[] args) throws SQLException, InvalidLoggerException {
 
         // Storage backend
         initializeStorageBackend();
@@ -129,7 +119,7 @@ public class RecipeManager {
     {
         if (Boolean.parseBoolean(DEFAULT_CONFIG.read("checkForUpdates"))) new Thread(() -> {
                 UpdateChecker.logUpdateCheck();
-                UpdateChecker.showInformationPane(false);
+                UpdateChecker.showInformationPane(false, true);
         }).start();
     }
 
@@ -139,7 +129,7 @@ public class RecipeManager {
     private static void initializeDatabase()
     {
         DatabaseController.initConnection();
-        if (!DB_STRUCTURE_INITIALIZED) {
+        if (!DB_STRUCTURE_INITIALIZED || (STORAGE_BACKEND.directoriesExist() && !new File(MAIN_DATABASE_PATH).exists())) {
             DatabaseController.executeStatementsFromFile(new File(DB_STRUCTURE_TEMPLATE), false, false);
             DatabaseController.initConnection();
             DatabaseController.executeStatementsFromFile(new File(DB_DATA_TEMPLATE), false, false);
@@ -193,9 +183,13 @@ public class RecipeManager {
      */
     public static void shutdownApp(int status)
     {
-        if (status == -1) {
+        if (status == ShutdownConst.CRITICAL) {
             Logger.log(LogType.CRITICAL, "An critical error occoured. Exiting process immediately ...");
             System.exit(status);
+        }
+        if (UpdateChecker.updateIsRunning() && status != ShutdownConst.UPDATE) {
+            AudioPlayer.playWarningNotification();
+            if (JOptionPane.showConfirmDialog(null, "Es wird ein Aktualisierungsvorgang im Hintergrund ausgeführt.\n\nProgramm beenden?", APPNAME + " | Warnung", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) return;
         }
         Logger.log(LogType.SYSTEM, "Received app shutdown request ... (Status code: " + status + ")");
         DatabaseController.closeConnection();

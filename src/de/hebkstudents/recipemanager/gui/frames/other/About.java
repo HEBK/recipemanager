@@ -168,7 +168,7 @@ public class About extends AppFrame {
             }
         });
 
-        updateCheckButton.addActionListener(e -> new Thread(() -> UpdateChecker.showInformationPane(true)).start());
+        updateCheckButton.addActionListener(e -> new Thread(() -> UpdateChecker.showInformationPane(true, false)).start());
         closeButton.addActionListener(e -> dispose());
     }
 

@@ -1,6 +1,7 @@
 package de.hebkstudents.recipemanager.recipe;
 
 import de.hebkstudents.recipemanager.exception.InvalidRecipeException;
+import de.hebkstudents.recipemanager.exception.InvalidRecipeFilterException;
 import de.hebkstudents.recipemanager.exception.RecipeCategoryNotFoundException;
 import de.hebkstudents.recipemanager.exception.RecipeNotFoundException;
 import de.hebkstudents.recipemanager.ingredient.Ingredient;
@@ -8,6 +9,7 @@ import de.hebkstudents.recipemanager.ingredient.IngredientController;
 import de.hebkstudents.recipemanager.storage.DatabaseController;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -116,6 +118,28 @@ public class RecipeController {
         Recipe[] recipesArray = new Recipe[recipes.size()];
         recipes.toArray(recipesArray);
         return recipesArray;
+    }
+
+    /**
+     * Gets filtered Recipes as recipe Array from the database
+     * @param filter Valid RecipeFilter object not null
+     * @return Recipe Array with filtered recipes
+     * @throws InvalidRecipeFilterException If the filter object is invalid
+     */
+    public static Recipe @NotNull [] getRecipes(RecipeFilter filter) throws InvalidRecipeFilterException {
+        if (filter == null) {
+            throw new InvalidRecipeFilterException("The given RecipeFilter object is invalid!");
+        }
+        ArrayList<Recipe> allRecipes = new ArrayList<>(Arrays.asList(getRecipes()));
+        ArrayList<Recipe> filteredRecipes = new ArrayList<>();
+        for (Recipe recipe : allRecipes) {
+            if (recipe.matchesFilter(filter)) {
+                filteredRecipes.add(recipe);
+            }
+        }
+        Recipe[] recipes = new Recipe[filteredRecipes.size()];
+        filteredRecipes.toArray(recipes);
+        return recipes;
     }
 
     /**

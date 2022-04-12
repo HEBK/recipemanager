@@ -43,7 +43,7 @@ public class IngredientFilter implements SimpleFilter {
     private String sqlOptions = null;
 
     /**
-     * Constructs a new IngredientCategoryFilter
+     * Constructs a new IngredientFilter
      * @param query Query string to filter ingredient names (null -> All Ingredient names)
      * @param isVegan Boolean to filter only for vegan ingredients (null -> No matter if vegan or not)
      * @param isVegetarian Boolean to filter only for vegetarian ingredients (null -> No matter if vegetarian or not)
@@ -60,7 +60,7 @@ public class IngredientFilter implements SimpleFilter {
     }
 
     /**
-     * Constructs a new IngredientCategoryFilter
+     * Constructs a new IngredientFilter
      * @param sqlOptions SQL-Options String to directly filter using SQL-Statement (e.g. "WHERE ...")
      */
     public IngredientFilter(String sqlOptions)

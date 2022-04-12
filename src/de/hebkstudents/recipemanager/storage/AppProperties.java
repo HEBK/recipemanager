@@ -40,7 +40,7 @@ public class AppProperties {
     /**
      * App version string
      */
-    public static final String VERSION = "1.0.0-rc2";
+    public static final String VERSION = "1.0.0-rc3";
 
     /**
      * Latest Version String
@@ -61,7 +61,7 @@ public class AppProperties {
     /**
      * Path to the main SQLite database
      */
-    protected static final String MAIN_DATABASE_PATH = STORAGE_PATH + "/data/mainRCMGRDB.db";
+    public static final String MAIN_DATABASE_PATH = STORAGE_PATH + "/data/main.db";
 
     /**
      * Path to the database structure SQL File

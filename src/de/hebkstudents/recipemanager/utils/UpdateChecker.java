@@ -1,6 +1,7 @@
 package de.hebkstudents.recipemanager.utils;
 
 import de.hebkstudents.recipemanager.RecipeManager;
+import de.hebkstudents.recipemanager.constant.ShutdownConst;
 import eu.cr4zyfl1x.logger.LogType;
 import eu.cr4zyfl1x.logger.Logger;
 
@@ -27,6 +28,11 @@ public class UpdateChecker {
      * Temporarily cached latest version string
      */
     private static String cacheVerString;
+
+    /**
+     * Thread object for update downloads
+     */
+    private static Thread updateDownloader;
 
     /**
      * Gets the latest version string from Update-Server
@@ -67,11 +73,13 @@ public class UpdateChecker {
     /**
      * Shows Update information panes
      * @param showUpToDateMessage If true -> Shows a pane if software is up-to-date
+     * @param playNotificationSound If true -> A positive notification sound is played if an update is available
      */
-    public static void showInformationPane(boolean showUpToDateMessage)
+    public static void showInformationPane(boolean showUpToDateMessage, boolean playNotificationSound)
     {
         if (updateAvailable()) {
             try {
+                if (playNotificationSound) AudioPlayer.playPositiveNotification();
                 if (JOptionPane.showConfirmDialog(null, "Version "+ getLatestVersionString(false) + " von " + APPNAME + " ist nun verfügbar!\n\nMöchten Sie diese jetzt herunterladen?\n\nIhre Version: " + VERSION, APPNAME + " | Update verfügbar!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     JOptionPane.showMessageDialog(null, "Der Download wird gestartet, sobald Sie auf OK klicken oder dieses Fenster schließen.\nDies kann je nach Internetverbindung eine längere Zeit in Anspruch nehmen.\n\nSie werden benachrichtigt, wenn das Update bereit ist.", APPNAME + " | Update wird heruntergeladen ...", JOptionPane.INFORMATION_MESSAGE);
                     downloadLatestInstaller(true);
@@ -101,12 +109,27 @@ public class UpdateChecker {
     }
 
     /**
+     * Checks if an update is currently running
+     * @return true if an update downloading process is running
+     */
+    public static boolean updateIsRunning()
+    {
+        return updateDownloader != null && updateDownloader.isAlive();
+    }
+
+    /**
      * Downloads the latest installer from Update-Server
      * @param showExecutePane Asks if the update should be executed
      */
     public static void downloadLatestInstaller(boolean showExecutePane)
     {
-        new Thread(() -> {
+        if (updateDownloader != null && updateDownloader.isAlive()) {
+            AudioPlayer.playWarningNotification();
+            new Thread(() -> JOptionPane.showMessageDialog(null, "Es ist bereits ein Aktualisierungsvorgang gestartet worden.\nBitte warten Sie, bis dieser abgeschlossen ist.", APPNAME + " | Warnung", JOptionPane.WARNING_MESSAGE)).start();
+            return;
+        }
+
+        updateDownloader = new Thread(() -> {
             try {
                 URL latestInstallerURL = new URL(LATEST_VERSION_INSTALLER_URL);
                 URLConnection connection = latestInstallerURL.openConnection();
@@ -131,7 +154,7 @@ public class UpdateChecker {
                         if (installer.exists()) {
                             RecipeManager.getManager().getController().stop(false);
                             Desktop.getDesktop().open(new File(STORAGE_PATH + "/cache/" + filename));
-                            RecipeManager.shutdownApp(1);
+                            RecipeManager.shutdownApp(ShutdownConst.UPDATE);
                         } else {
                             JOptionPane.showMessageDialog(null, "Der Installer konnte nicht ausgeführt werden!", APPNAME + " | Fehler", JOptionPane.ERROR_MESSAGE);
                         }
@@ -143,6 +166,9 @@ public class UpdateChecker {
                 new Thread(() -> JOptionPane.showMessageDialog(null, "Es trat ein fehler während der Aktualisierung auf!\n\n" + e.getMessage(), APPNAME + " | Fehler", JOptionPane.ERROR_MESSAGE)).start();
                 RecipeManager.getManager().getController().run();
             }
-        }).start();
+        });
+
+        // Start Downloader
+        updateDownloader.start();
     }
 }

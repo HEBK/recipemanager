@@ -148,6 +148,7 @@ public class ShowRecipes extends AppFrame {
             }
         });
 
+        filterButton.addActionListener(e -> getController().openFrameRecipeFilter());
 
         setCountLabel(recipesTable.getRowCount());
     }

@@ -5,8 +5,19 @@ package de.hebkstudents.recipemanager.list;
  */
 public enum AboutPanels {
 
+    /**
+     * About panel
+     */
     ABOUT,
+
+    /**
+     * Third-Party-License panel
+     */
     THIRD_PARTY,
+
+    /**
+     * License panel
+     */
     LICENSE
 
 }

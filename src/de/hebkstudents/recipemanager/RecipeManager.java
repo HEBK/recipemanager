@@ -23,6 +23,9 @@ import static de.hebkstudents.recipemanager.storage.AppProperties.*;
 
 public class RecipeManager {
 
+    /**
+     * RecipeManager App object
+     */
     private static RecipeManager manager;
 
     /**
